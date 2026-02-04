@@ -1,0 +1,102 @@
+/* Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.25s ease;
+}
+
+/* Popup card */
+.popup {
+  background: #ffffff;
+  width: 340px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+  animation: popupIn 0.35s cubic-bezier(.4,0,.2,1);
+}
+
+/* Header */
+.popup-header {
+  padding: 18px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+  text-align: center;
+}
+
+.popup-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Body */
+.popup-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.popup-body p {
+  margin: 0;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* Footer */
+.popup-footer {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Button */
+.ok-btn {
+  padding: 10px 26px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.ok-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35);
+}
+
+.ok-btn:active {
+  transform: scale(0.96);
+}
+
+/* Animations */
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Mobile */
+@media (max-width: 420px) {
+  .popup {
+    width: 90%;
+  }
+}

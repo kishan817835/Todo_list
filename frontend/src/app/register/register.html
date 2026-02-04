@@ -1,0 +1,78 @@
+<div class="register-container">
+
+  <!-- LEFT ILLUSTRATION -->
+  <div class="register-left">
+    <img 
+      src="/signup.jpg"
+      alt="Register Illustration"
+    />
+  </div>
+
+ 
+  <div class="register-right">
+    <div class="register-card">
+
+     
+      <div class="header">
+        <div class="logo">
+          <img
+            src="https://img.freepik.com/premium-vector/happy-smiling-young-man-avatar-3d-portrait-man-cartoon-character-people-vector-illustration_653240-187.jpg?w=2000"
+            alt="Logo"
+          />
+        </div>
+
+        <h1>Create Account</h1>
+        <p class="subtitle">Create an account to get started</p>
+      </div>
+
+      
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit()" class="registration-form">
+
+        <div class="form-group">
+             <i class="fa fa-user icon"></i>
+          <input type="text" name="name" placeholder="Full Name"
+            [(ngModel)]="user.name" required />
+        </div>
+
+        <div class="form-group">
+            <i class="fa fa-at icon"></i>
+          <input type="text" name="username" placeholder="Username"
+            [(ngModel)]="user.username" required />
+        </div>
+
+        <div class="form-group">
+            <i class="fa fa-envelope icon"></i>
+          <input type="email" name="email" placeholder="Email Address"
+            [(ngModel)]="user.email" required />
+        </div>
+
+        <div class="form-group">
+             <i class="fa fa-lock icon"></i>
+          <input type="password" name="password" placeholder="Password"
+            [(ngModel)]="user.password" required />
+        </div>
+
+        <button type="submit" [disabled]="registerForm.invalid || isLoading">
+  {{ isLoading ? 'Please wait...' : 'Register' }}
+</button>
+
+
+      </form>
+
+      <div class="login-link">
+        Already have an account?
+        <a routerLink="/login">Sign in</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<app-popup
+  [show]="showPopup"
+  title="Alert"
+  [message]="popupMessage"
+  [redirectTo]="redirectPath"
+  (close)="closePopup()">
+</app-popup>
+
