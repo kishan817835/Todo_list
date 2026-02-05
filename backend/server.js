@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/user.routes.js";
 import taskRoutes from "./routes/task.routes.js";
+import mailRoutes from "./routes/mail.routes.js";
 dotenv.config();
 connectDB();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use("/api", userRoutes);
 app.use("/api", taskRoutes);
+app.use("/api/mail", mailRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });

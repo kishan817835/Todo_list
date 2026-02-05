@@ -38,7 +38,8 @@ export const getMyTasks = async (req, res) => {
     if (status) filter.status = status;
     if (priority) filter.priority = priority;
 
-    const tasks = await Task.find(filter).sort({ order: 1 });
+    const tasks = await Task.find(filter)
+      .sort({ createdAt: -1 });
 
     res.json({
       success: true,
@@ -46,9 +47,13 @@ export const getMyTasks = async (req, res) => {
       data: tasks
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
+
 
 export const updateTask = async (req, res) => {
   try {
