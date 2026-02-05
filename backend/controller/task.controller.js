@@ -2,7 +2,7 @@ import Task from "../models/task.model.js";
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, priority, dueDate } = req.body;
+    const { title, description, priority, dueDate,deadlineTime } = req.body;
 
     const lastTask = await Task
       .findOne({ createdBy: req.user.userId })
@@ -15,6 +15,7 @@ export const createTask = async (req, res) => {
       description,
       priority,
       dueDate,
+      deadlineTime,
       createdBy: req.user.userId,
       order: nextOrder
     });
