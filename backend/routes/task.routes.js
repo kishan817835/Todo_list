@@ -5,7 +5,8 @@ import {
   updateTask,
   deleteTask,
   reorderTasks,
-  getTaskDaysCount
+  getTaskDaysCount,
+  getRecentTasks
 } from "../controller/task.controller.js";
 
 import { auth } from "../middleware/auth.js";
@@ -19,6 +20,7 @@ router.use(auth);
 router.post("/createtask", createTask);
 
 router.get("/gettasks", getMyTasks);
+router.get("/gettasks/recent", getRecentTasks);
 
 router.put("/updatetask/:id", updateTask);
 

@@ -54,6 +54,28 @@ export const getMyTasks = async (req, res) => {
     });
   }
 };
+export const getRecentTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({
+      createdBy: req.user.userId
+    })
+      .sort({ createdAt: -1 })
+      .limit(6);              
+
+    res.json({
+      success: true,
+      count: tasks.length,
+      data: tasks
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 
 
 export const updateTask = async (req, res) => {
