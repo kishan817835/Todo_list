@@ -56,16 +56,48 @@ export const getMyTasks = async (req, res) => {
 };
 export const getRecentTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({
-      createdBy: req.user.userId
-    })
-      .sort({ createdAt: -1 })
-      .limit(6);              
+    const userId = req.user.userId;
+
+
+    const [recentTasks, totalCount, statusCounts] = await Promise.all([
+      // recent 6 tasks
+      Task.find({ createdBy: userId })
+        .sort({ createdAt: -1 })
+        .limit(6),
+
+     
+      Task.countDocuments({ createdBy: userId }),
+
+     
+      Task.aggregate([
+        { $match: { createdBy: userId } },
+        {
+          $group: {
+            _id: "$status",
+            count: { $sum: 1 }
+          }
+        }
+      ])
+    ]);
+
+    
+    let completed = 0;
+    let pending = 0;
+
+    statusCounts.forEach(item => {
+      if (item._id === "completed") completed = item.count;
+      if (item._id === "pending") pending = item.count;
+    });
 
     res.json({
       success: true,
-      count: tasks.length,
-      data: tasks
+      counts: {
+        total: totalCount,
+        completed,
+        pending
+      },
+      recentCount: recentTasks.length,
+      data: recentTasks
     });
 
   } catch (error) {
@@ -75,6 +107,7 @@ export const getRecentTasks = async (req, res) => {
     });
   }
 };
+
 
 
 
