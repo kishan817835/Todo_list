@@ -1,4 +1,5 @@
 import Task from "../models/task.model.js";
+import mongoose from "mongoose";
 
 export const createTask = async (req, res) => {
   try {
@@ -56,19 +57,16 @@ export const getMyTasks = async (req, res) => {
 };
 export const getRecentTasks = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = new mongoose.Types.ObjectId(req.user.userId); // ✅ FIX
 
+    const [completedTasks, totalCount, pendingTasks] = await Promise.all([
 
-    const [recentTasks, totalCount, statusCounts] = await Promise.all([
-      // recent 6 tasks
       Task.find({ createdBy: userId })
         .sort({ createdAt: -1 })
         .limit(6),
 
-     
       Task.countDocuments({ createdBy: userId }),
 
-     
       Task.aggregate([
         { $match: { createdBy: userId } },
         {
@@ -80,11 +78,10 @@ export const getRecentTasks = async (req, res) => {
       ])
     ]);
 
-    
     let completed = 0;
     let pending = 0;
 
-    statusCounts.forEach(item => {
+    pendingTasks.forEach(item => {
       if (item._id === "completed") completed = item.count;
       if (item._id === "pending") pending = item.count;
     });
@@ -96,8 +93,8 @@ export const getRecentTasks = async (req, res) => {
         completed,
         pending
       },
-      recentCount: recentTasks.length,
-      data: recentTasks
+      recentCount: completedTasks.length,
+      data: completedTasks
     });
 
   } catch (error) {
@@ -107,6 +104,7 @@ export const getRecentTasks = async (req, res) => {
     });
   }
 };
+
 
 
 
