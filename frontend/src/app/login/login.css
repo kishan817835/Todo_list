@@ -1,0 +1,318 @@
+/* ================= HOST ================= */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+  background: #f6f5f7;
+}
+
+/* ================= MAIN CONTAINER ================= */
+.main-container {
+  background-color: #fff;
+  border-radius: 22px;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+              0 10px 10px rgba(0,0,0,0.22);
+  position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+}
+
+/* ================= SIGN IN ================= */
+.sign-in-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* vertical center */
+  align-items: center;       /* horizontal center */
+}
+
+/* ================= LOGIN IMAGE ================= */
+.login-image {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 25px;
+}
+
+.login-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #512da8;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
+
+/* ================= FORM ================= */
+.sign-in-container form {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+
+/* ================= INPUT FIELD ================= */
+.input-field {
+  position: relative;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.input-field i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 16px;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 12px 12px 12px 42px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #eee;
+  outline: none;
+  font-size: 14px;
+}
+
+.input-field input:focus {
+  border-color: #512da8;
+  background: #fff;
+}
+
+/* ================= BUTTON ================= */
+.login-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: #512da8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: #4527a0;
+}
+
+.login-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ================= SIGN UP SIDE ================= */
+.sign-up-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+}
+
+/* ================= OVERLAY ================= */
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.overlay {
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  color: #fff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+}
+
+/* ================= OVERLAY PANELS ================= */
+.overlay-panel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 40px;
+}
+
+.overlay-right {
+  right: 0;
+}
+
+/* ================= TEXT ================= */
+h1 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ================= BUTTON COMMON ================= */
+button {
+  border-radius: 20px;
+  border: 1px solid #ff4b2b;
+  background-color: #ff4b2b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+button.ghost {
+  background: transparent;
+  border-color: #fff;
+}
+
+/* ================= MOBILE ================= */
+/* ================= MOBILE & TABLET ================= */
+@media (max-width: 768px) {
+
+  :host {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+  }
+
+  .main-container {
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ❌ Overlay hata do */
+  .overlay-container,
+  .overlay,
+  .overlay-panel,
+  .sign-up-container {
+    display: none !important;
+  }
+
+  /* ✅ Sign-in full screen card */
+  .sign-in-container {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    padding: 40px 25px;
+
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 🟢 Image center */
+  .login-image {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+  }
+
+  /* 🟢 Form center */
+  .sign-in-container form {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .input-field {
+    width: 100%;
+  }
+
+  .input-field input {
+    font-size: 16px;
+    padding: 14px 14px 14px 44px;
+    border-radius: 12px;
+  }
+
+  .login-btn {
+    margin-top: 18px;
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 14px;
+  }
+}
+
+/* ================= SMALL MOBILE ================= */
+@media (max-width: 480px) {
+
+  .sign-in-container {
+    margin: 0 16px;
+    padding: 35px 20px;
+  }
+
+  .login-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .input-field input {
+    padding: 13px 13px 13px 42px;
+    font-size: 15px;
+  }
+
+  .login-btn {
+    padding: 13px;
+    font-size: 14px;
+  }
+}
+.mobile-register {
+  display: none;
+  margin-top: 18px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.mobile-register a {
+  color: #512da8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* 📱 MOBILE ONLY */
+@media (max-width: 768px) {
+  .mobile-register {
+    display: block;
+  }
+}
+
+

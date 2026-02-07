@@ -241,6 +241,39 @@ export const getPublicTaskById = async (req, res) => {
     });
   }
 };
+
+export const getTaskById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the task - user can access their own private tasks or any public task
+    const task = await Task.findOne({
+      _id: id,
+      $or: [
+        { createdBy: req.user.userId }, // User's own task (private or public)
+        { visibility: "public" } // Any public task
+      ]
+    }).populate('createdBy', 'name email');
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found or access denied"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: task
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 export const getTaskDaysCount = async (req, res) => {
   try {
     const { id } = req.params;

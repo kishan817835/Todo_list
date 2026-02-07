@@ -5,6 +5,8 @@ import { Api } from '../service/api';
 import { Router, RouterLink } from '@angular/router';
 import { PopupComponent } from '../popup/popup';
 import {ChangeDetectorRef} from '@angular/core';
+import { RegisterData } from './registerobj';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -14,11 +16,12 @@ import {ChangeDetectorRef} from '@angular/core';
 })
 export class Register {
 
-  user = {
+  user: RegisterData = {
     name: '',
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
   };
 
 showPopup = false;
@@ -47,6 +50,15 @@ onSubmit() {
   return;
 }
 
+if (this.user.password !== this.user.confirmPassword) {
+  this.popupMessage = 'Passwords do not match';
+  this.redirectPath = null;
+  this.showPopup = true;
+  this.cdr.detectChanges();
+  return;
+}
+
+
 
   this.isLoading = true;
 
@@ -68,6 +80,7 @@ onSubmit() {
       this.user.email = '';
       this.user.password = '';
       this.user.name = '';
+      this.user.confirmPassword = '';
       this.cdr.detectChanges();
     }
   });

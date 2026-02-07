@@ -1,9 +1,9 @@
 <div class="register-container">
 
-  <!-- LEFT ILLUSTRATION -->
+
   <div class="register-left">
     <img 
-      src="/signup.jpg"
+      src="/signup.png"
       alt="Register Illustration"
     />
   </div>
@@ -50,6 +50,12 @@
              <i class="fa fa-lock icon"></i>
           <input type="password" name="password" placeholder="Password"
             [(ngModel)]="user.password" required />
+        </div>
+
+        <div class="form-group">
+             <i class="fa fa-lock icon"></i>
+          <input type="password" name="confirmPassword" placeholder="Confirm Password"
+            [(ngModel)]="user.confirmPassword" required />
         </div>
 
         <button type="submit" [disabled]="registerForm.invalid || isLoading">
