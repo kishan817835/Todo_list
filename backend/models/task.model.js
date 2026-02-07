@@ -48,7 +48,14 @@ const taskSchema = new mongoose.Schema(
     deadlineTime: {
       type: String,
       required: false
-    }
+    },
+    visibility:{
+    type: String,
+    enum: ["public", "private"],
+    default: "private",
+    index: true
+  } 
+
   },
   {
     timestamps: true
@@ -59,5 +66,6 @@ taskSchema.index({ createdBy: 1, order: 1 });
 taskSchema.index({ createdBy: 1, status: 1 });
 taskSchema.index({ createdBy: 1, priority: 1 });
 taskSchema.index({ createdBy: 1, dueDate: 1 });
+taskSchema.index({ createdBy: 1, visibility: 1 });
 
 export default mongoose.model("Task", taskSchema);

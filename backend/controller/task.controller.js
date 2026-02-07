@@ -107,6 +107,38 @@ export const getRecentTasks = async (req, res) => {
 
 
 
+export const publicTask = async (req, res) => {
+  const { visibility, taskId } = req.body;
+
+  // Optional: validate visibility
+  if (!["public", "private"].includes(visibility)) {
+    return res.status(400).json({
+      success: false,
+      message: "Visibility must be 'public' or 'private'"
+    });
+  }
+
+  try {
+    // Find the task created by the logged-in user
+    const task = await Task.findOne({ _id: taskId, createdBy: req.user.userId });
+
+    if (!task) {
+      return res.status(404).json({ success: false, message: "Task not found" });
+    }
+
+    // Update visibility
+    task.visibility = visibility;
+    await task.save();
+
+    res.json({
+      success: true,
+      message: "Task visibility updated",
+      data: task
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 
 export const updateTask = async (req, res) => {
@@ -181,6 +213,32 @@ export const reorderTasks = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const getPublicTaskById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the task by ID and check if it's public
+    const task = await Task.findOne({ _id: id, visibility: "public" })
+      .populate('createdBy', 'name email');
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Public task not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      data: task
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
   }
 };
 export const getTaskDaysCount = async (req, res) => {

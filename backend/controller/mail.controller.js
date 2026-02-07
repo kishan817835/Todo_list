@@ -1,5 +1,5 @@
 import transporter from "../utils/mailer.js";
-
+import Task from "../models/task.model.js";
 
 
 export const sendCustomMail = async (req, res) => {
@@ -25,3 +25,6 @@ export const sendCustomMail = async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 };
+
+
+
