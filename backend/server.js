@@ -21,7 +21,7 @@ app.use(express.json());
 
 app.use("/api", userRoutes);
 app.use("/api", taskRoutes);
-app.use("/api/mail", mailRoutes);
+app.use("/api", mailRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
