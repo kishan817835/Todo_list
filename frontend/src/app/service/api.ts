@@ -38,6 +38,10 @@ export class Api {
     return this.http.get(`${urlconstants.gettaskbyid}/${taskId}`);
   }
   
+  getPublicTaskById(taskId: string): Observable<any> {
+    return this.http.get(`${urlconstants.getpublictaskbyid}/${taskId}`);
+  }
+  
   updateTask(taskId: string, payload: any): Observable<any> {
     return this.http.put(`${urlconstants.updatetask}/${taskId}`, payload);
   }

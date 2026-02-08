@@ -248,7 +248,17 @@ onMailToggle() {
   }
   
   viewTaskDetail(taskId: string) {
-    this.router.navigate(['/task', taskId]);
+    // Find the task to check its visibility
+    const task = this.tasks.find(t => t._id === taskId);
+    if (task) {
+      if (task.visibility === 'public') {
+        this.router.navigate(['/task/public', taskId]);
+      } else {
+        this.router.navigate(['/task', taskId]);
+      }
+    } else {
+      this.router.navigate(['/task', taskId]);
+    }
   }
   
   cancelEdit() {

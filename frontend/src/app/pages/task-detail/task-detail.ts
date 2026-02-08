@@ -69,16 +69,24 @@ export class TaskDetail implements OnInit {
   ngOnInit() {
     this.loadUserProfile();
     
-    // Check if user is authenticated
-    const token = this.secureLs.get('token');
-    if (!token) {
-      this.router.navigate(['/login']);
-      return;
-    }
-    
     this.taskId = this.route.snapshot.paramMap.get('id') || '';
     if (this.taskId) {
-      this.loadTaskDetail();
+      // Check if this is a public route
+      const isPublicRoute = this.route.snapshot.url[0]?.path === 'task' && 
+                           this.route.snapshot.url[1]?.path === 'public';
+      
+      if (isPublicRoute) {
+        // For public tasks, no authentication required
+        this.loadPublicTaskDetail();
+      } else {
+        // For private tasks, check authentication
+        const token = this.secureLs.get('token');
+        if (!token) {
+          this.router.navigate(['/login']);
+          return;
+        }
+        this.loadTaskDetail();
+      }
     } else {
       this.showMessage('Task ID not found');
       this.router.navigate(['/dashboard']);
@@ -108,6 +116,28 @@ export class TaskDetail implements OnInit {
       error: (error) => {
         console.error('Error loading task detail:', error);
         this.showMessage('Failed to load task details');
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadPublicTaskDetail() {
+    this.isLoading = true;
+    this.api.getPublicTaskById(this.taskId).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          this.task = response.data;
+        } else {
+          this.showMessage('Public task not found');
+          this.router.navigate(['']);
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading public task detail:', error);
+        this.showMessage('Failed to load public task details');
         this.isLoading = false;
         this.cdr.detectChanges();
       }

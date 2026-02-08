@@ -1,5 +1,5 @@
 export class urlconstants {
-    static serveapi = "http://localhost:5000/api";
+    static serveapi = "https://todo-list-cp7j.onrender.com/api";
     
     static createaccount = this.serveapi + "/signup";
     static login = this.serveapi + "/login";
@@ -8,6 +8,7 @@ export class urlconstants {
     static gettasks = this.serveapi + "/gettasks";
     static getrecenttasks = this.serveapi + "/gettasks/recent";
     static gettaskbyid = this.serveapi + "/task";
+    static getpublictaskbyid = this.serveapi + "/task/public";
     static updatetask = this.serveapi + "/updatetask";
     static deletetask = this.serveapi + "/deletetask";
     static reordertasks = this.serveapi + "/reorder/all";
