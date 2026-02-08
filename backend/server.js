@@ -15,7 +15,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:4200',
-    'https://9frp2hq4-4200.inc1.devtunnels.ms'
+    'https://todo-list-steel-phi.vercel.app'
   ],
   credentials: true
 }));
