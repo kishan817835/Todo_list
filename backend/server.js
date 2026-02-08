@@ -12,11 +12,14 @@ connectDB();
 
 const app = express();
 
-// CORS configuration
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: [
+    'http://localhost:4200',
+    'https://9frp2hq4-4200.inc1.devtunnels.ms'
+  ],
   credentials: true
 }));
+
 
 app.use(express.json());
 
