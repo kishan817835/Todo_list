@@ -153,6 +153,9 @@
   line-height: 1.6;
   color: #374151;
   font-size: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .task-description p {
@@ -183,6 +186,45 @@
   border-radius: 4px;
   font-family: 'Courier New', monospace;
   font-size: 0.875rem;
+}
+
+.task-description pre {
+  background: #f3f4f6;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.task-description pre code {
+  background: none;
+  padding: 0;
+}
+
+.task-description img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.task-description table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.9rem;
+}
+
+.task-description th,
+.task-description td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.task-description th {
+  background: #f9fafb;
+  font-weight: 600;
 }
 
 /* Task Details Grid */
@@ -438,10 +480,53 @@
 
   .task-description-section h2 {
     font-size: 1.1rem;
+    margin-bottom: 0.75rem;
   }
 
   .task-description {
     font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .task-description p {
+    margin-bottom: 0.75rem;
+  }
+
+  .task-description ul,
+  .task-description ol {
+    margin: 0.75rem 0;
+    padding-left: 20px;
+  }
+
+  .task-description blockquote {
+    margin: 0.75rem 0;
+    padding-left: 12px;
+    font-size: 0.9rem;
+  }
+
+  .task-description code {
+    padding: 1px 6px;
+    font-size: 0.8rem;
+  }
+
+  .task-description pre {
+    padding: 8px;
+    font-size: 0.8rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .task-description table {
+    font-size: 0.8rem;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .task-description th,
+  .task-description td {
+    padding: 6px 8px;
   }
 
   .task-details-grid {
@@ -542,6 +627,7 @@
 
   .task-description {
     font-size: 0.9rem;
+    line-height: 1.8;
   }
 
   .task-description p {
@@ -551,17 +637,46 @@
   .task-description ul,
   .task-description ol {
     margin: 0.75rem 0;
-    padding-left: 20px;
+    padding-left: 18px;
   }
 
   .task-description blockquote {
     margin: 0.75rem 0;
-    padding-left: 12px;
+    padding-left: 10px;
+    font-size: 0.85rem;
   }
 
   .task-description code {
-    padding: 1px 6px;
+    padding: 1px 5px;
     font-size: 0.8rem;
+    word-break: break-all;
+  }
+
+  .task-description pre {
+    padding: 6px;
+    font-size: 0.75rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 4px;
+  }
+
+  .task-description img {
+    margin: 8px 0;
+    border-radius: 6px;
+  }
+
+  .task-description table {
+    font-size: 0.75rem;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    margin: 8px 0;
+  }
+
+  .task-description th,
+  .task-description td {
+    padding: 4px 6px;
   }
 
   .task-details-grid {
@@ -660,6 +775,65 @@
 
   .task-description-section {
     padding: 0.75rem;
+  }
+
+  .task-description-section h2 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .task-description {
+    font-size: 0.85rem;
+    line-height: 1.9;
+  }
+
+  .task-description p {
+    margin-bottom: 0.6rem;
+  }
+
+  .task-description ul,
+  .task-description ol {
+    margin: 0.6rem 0;
+    padding-left: 16px;
+  }
+
+  .task-description blockquote {
+    margin: 0.6rem 0;
+    padding-left: 8px;
+    font-size: 0.8rem;
+  }
+
+  .task-description code {
+    padding: 1px 4px;
+    font-size: 0.75rem;
+    word-break: break-all;
+  }
+
+  .task-description pre {
+    padding: 4px;
+    font-size: 0.7rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 3px;
+  }
+
+  .task-description img {
+    margin: 6px 0;
+    border-radius: 4px;
+  }
+
+  .task-description table {
+    font-size: 0.7rem;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    margin: 6px 0;
+  }
+
+  .task-description th,
+  .task-description td {
+    padding: 3px 5px;
   }
 
   .task-details-grid {
