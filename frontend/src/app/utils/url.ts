@@ -1,5 +1,5 @@
 export class urlconstants {
-    static serveapi = "http://localhost:5000/api";
+    static serveapi = (window as any).__env?.API_URL || "http://localhost:5000/api";
     
     static createaccount = this.serveapi + "/signup";
     static login = this.serveapi + "/login";
