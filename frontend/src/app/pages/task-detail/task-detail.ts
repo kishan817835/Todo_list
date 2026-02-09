@@ -23,6 +23,9 @@ interface Task {
   visibility?: 'public' | 'private';
 }
 
+
+
+
 interface User {
   id: string;
   name: string;
@@ -45,6 +48,7 @@ export class TaskDetail implements OnInit {
   userProfile: User | null = null;
   showPopup: boolean = false;
   popupMessage: string = '';
+  isPublicTask: boolean = false;
 
   priorityOptions = [
     { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800' },
@@ -71,7 +75,7 @@ export class TaskDetail implements OnInit {
     
     this.taskId = this.route.snapshot.paramMap.get('id') || '';
     if (this.taskId) {
-      // Check if this is a public route
+     
       const isPublicRoute = this.route.snapshot.url[0]?.path === 'task' && 
                            this.route.snapshot.url[1]?.path === 'public';
       
@@ -128,6 +132,14 @@ export class TaskDetail implements OnInit {
       next: (response: any) => {
         if (response.success) {
           this.task = response.data;
+          console.log(response.data.visibility)
+          if (response.data.visibility === 'public') {
+            this.isPublicTask = true;
+            console.log(this.isPublicTask)
+          } else {
+            this.isPublicTask = false;
+          }
+         
         } else {
           this.showMessage('Public task not found');
           this.router.navigate(['']);
