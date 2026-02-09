@@ -14,11 +14,8 @@ const app = express();
 
 app.use(cors({
   origin: [
-    'http://localhost:4200',
+    
     'https://todo-list-steel-phi.vercel.app',
-    'http://localhost:58127',
-    'http://localhost:51579',
-    'http://localhost:64854'
   ],
   credentials: true
 }));
