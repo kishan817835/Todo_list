@@ -125,6 +125,11 @@ export class TaskDetail implements OnInit {
       }
     });
   }
+  get showBackButton(): boolean {
+  const token = this.secureLs.get('token'); 
+  return !this.isPublicTask || !!token; 
+}
+
 
   loadPublicTaskDetail() {
     this.isLoading = true;

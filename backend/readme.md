@@ -1,407 +1,334 @@
-# Task Management API Documentation
+# Task Management API Backend
 
-## Overview
+A robust RESTful API backend for task management with user authentication, built with Node.js, Express.js, and MongoDB.
 
-This is a RESTful API for task management with user authentication. The API allows users to create, read, update, delete, and reorder tasks with filtering capabilities.
+## 🚀 Overview
 
-## Base URL
+This backend provides a comprehensive API for task management with features like user authentication, task CRUD operations, advanced filtering, task reordering, and analytics. It's designed to work seamlessly with the Angular frontend but can be used with any frontend framework.
+
+## 🛠️ Tech Stack
+
+- **Node.js** - JavaScript runtime environment
+- **Express.js 5** - Fast, unopinionated web framework
+- **MongoDB** - NoSQL document database
+- **Mongoose** - Elegant MongoDB object modeling
+- **JWT** - JSON Web Tokens for authentication
+- **bcryptjs** - Password hashing
+- **Passport** - Authentication middleware
+- **Google OAuth 2.0** - Social authentication
+- **Nodemailer** - Email sending
+- **Cookie-session** - Session management
+- **CORS** - Cross-Origin Resource Sharing
+- **dotenv** - Environment variable management
+
+## 📋 Features
+
+- ✅ **User Authentication** with JWT and Google OAuth
+- ✅ **Secure Password** hashing with bcrypt
+- ✅ **Task CRUD Operations** with full validation
+- ✅ **Advanced Filtering** by status and priority
+- ✅ **Task Reordering** with drag-and-drop support
+- ✅ **Task Analytics** with days calculation
+- ✅ **Input Validation** and sanitization
+- ✅ **Error Handling** with proper HTTP status codes
+- ✅ **Database Indexing** for optimal performance
+- ✅ **User Isolation** for data security
+- ✅ **Session Management** with cookies
+- ✅ **Email Notifications** support
+- ✅ **API Documentation** with examples
+
+## 📁 Project Structure
 
 ```
-http://localhost:5000/api
+backend/
+├── controller/              # Route controllers
+│   ├── authController.js   # Authentication logic
+│   ├── taskController.js   # Task operations
+│   └── userController.js   # User management
+├── middleware/              # Custom middleware
+│   └── auth.js            # Authentication middleware
+├── models/                 # Data models
+│   ├── User.js            # User schema
+│   └── Task.js            # Task schema
+├── routes/                 # API routes
+│   ├── auth.js            # Authentication routes
+│   ├── tasks.js           # Task routes
+│   └── users.js           # User routes
+├── config/                 # Database configuration
+│   └── db.js              # MongoDB connection
+├── utils/                  # Utility functions
+│   └── helpers.js         # Helper functions
+├── API_DOCUMENTATION.md    # Detailed API documentation
+├── package.json           # Dependencies and scripts
+├── server.js              # Server entry point
+├── seed.js                # Database seeding
+└── .env                   # Environment variables
 ```
 
-## Authentication
+## 🚀 Getting Started
 
-All task-related endpoints require JWT authentication. Include the token in the Authorization header:
+### Prerequisites
 
+- Node.js (v18 or higher)
+- npm or yarn
+- MongoDB (local or cloud instance)
+
+### Installation
+
+1. **Navigate to backend directory:**
+   ```bash
+   cd backend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables:**
+   ```bash
+   # Copy example environment file
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+### Environment Variables
+
+Create a `.env` file with the following variables:
+
+```env
+# Database
+MONGODB_URI=mongodb://localhost:27017/taskmanager
+
+# Server
+PORT=5000
+
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_EXPIRE=7d
+
+# Google OAuth (Optional)
+GOOGLE_CLIENT_ID=your-google-oauth-client-id
+GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
+
+# Email (Optional)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+
+# Frontend URL
+FRONTEND_URL=http://localhost:4200
 ```
-Authorization: Bearer <your-jwt-token>
+
+### Running the Server
+
+**Development mode:**
+```bash
+npm start
 ```
 
-## Data Models
+**With nodemon (for auto-restart):**
+```bash
+npm run dev
+```
+
+The server will start on `http://localhost:5000`
+
+## 📊 Database Schema
 
 ### User Model
 
-```json
+```javascript
 {
-  "_id": "ObjectId",
-  "name": "String (required)",
-  "username": "String (required, unique)",
-  "email": "String (required, unique)",
-  "password": "String (required, hashed)",
-  "role": "String (enum: ['user', 'admin'], default: 'user')",
-  "createdAt": "Date"
+  _id: ObjectId,
+  name: String (required),
+  username: String (required, unique),
+  email: String (required, unique),
+  password: String (required, hashed),
+  role: String (enum: ['user', 'admin'], default: 'user'),
+  googleId: String (optional, for OAuth),
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
 ### Task Model
 
-```json
+```javascript
 {
-  "_id": "ObjectId",
-  "title": "String (required, max: 150)",
-  "description": "String (optional)",
-  "status": "String (enum: ['pending', 'in-progress', 'completed'], default: 'pending')",
-  "priority": "String (enum: ['low', 'medium', 'high'], default: 'medium')",
-  "dueDate": "Date (optional)",
-  "completedAt": "Date (optional)",
-  "order": "Number (required)",
-  "createdBy": "ObjectId (ref: User, required)",
-  "assignedTo": "ObjectId (ref: User, optional)",
-  "createdAt": "Date",
-  "updatedAt": "Date"
+  _id: ObjectId,
+  title: String (required, max: 150),
+  description: String (optional),
+  status: String (enum: ['pending', 'in-progress', 'completed'], default: 'pending'),
+  priority: String (enum: ['low', 'medium', 'high'], default: 'medium'),
+  dueDate: Date (optional),
+  completedAt: Date (optional),
+  order: Number (required),
+  createdBy: ObjectId (ref: User, required),
+  assignedTo: ObjectId (ref: User, optional),
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
-## API Endpoints
+## 🔐 Authentication
+
+### JWT Authentication
+
+- Uses JSON Web Tokens for stateless authentication
+- Tokens expire in 7 days by default
+- Secure password hashing with bcrypt
+- Middleware for protected routes
+
+### Google OAuth 2.0
+
+- Optional social authentication
+- Redirects to Google for authentication
+- Creates or links user accounts
+- Generates JWT tokens after successful OAuth
+
+## 🛡️ Security Features
+
+- **Password Hashing** with bcrypt (10 rounds)
+- **JWT Token** validation
+- **Input Validation** and sanitization
+- **CORS Configuration** for cross-origin requests
+- **Rate Limiting** (can be implemented)
+- **Helmet.js** for security headers (recommended)
+- **Environment Variables** for sensitive data
+
+## 📈 Performance
+
+- **Database Indexing** for faster queries
+- **Connection Pooling** with MongoDB
+- **Async/Await** for non-blocking operations
+- **Error Handling** with proper HTTP status codes
+- **Validation** at multiple layers
+
+## 🧪 Testing
+
+**Unit Tests:**
+```bash
+npm test
+```
+
+**Integration Tests:**
+```bash
+npm run test:integration
+```
+
+**Test Coverage:**
+```bash
+npm run test:coverage
+```
+
+## 📝 API Endpoints
 
 ### Authentication Routes
 
-#### 1. User Signup
-- **Endpoint:** `POST /api/signup`
-- **Description:** Register a new user
-- **Request Body:**
-```json
-{
-  "name": "John Doe",
-  "username": "johndoe",
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-- **Response:**
-```json
-{
-  "message": "Signup successful",
-  "user": {
-    "id": "userId",
-    "name": "John Doe",
-    "username": "johndoe",
-    "email": "john@example.com",
-    "role": "user"
-  }
-}
-```
+- `POST /api/signup` - User registration
+- `POST /api/login` - User login
+- `POST /api/google` - Google OAuth
+- `GET /api/logout` - User logout
 
-#### 2. User Login
-- **Endpoint:** `POST /api/login`
-- **Description:** Authenticate user and get JWT token
-- **Request Body:**
-```json
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-- **OR**
-```json
-{
-  "username": "johndoe",
-  "password": "password123"
-}
-```
-- **Response:**
-```json
-{
-  "message": "Login successful",
-  "token": "jwt-token-here",
-  "user": {
-    "id": "userId",
-    "name": "John Doe",
-    "username": "johndoe",
-    "email": "john@example.com",
-    "role": "user"
-  }
-}
-```
+### Task Routes
 
-### Task Routes (All require authentication)
+- `POST /api/createtask` - Create new task
+- `GET /api/gettasks` - Get user tasks with filters
+- `PUT /api/updatetask/:id` - Update task
+- `DELETE /api/deletetask/:id` - Delete task
+- `PUT /api/reorder/all` - Reorder tasks
+- `GET /api/taskdayscount/:id` - Get task days count
 
-#### 3. Create Task
-- **Endpoint:** `POST /api/createtask`
-- **Headers:** `Authorization: Bearer <token>`
-- **Description:** Create a new task for the authenticated user
-- **Request Body:**
-```json
-{
-  "title": "Complete project",
-  "description": "Finish the task management project",
-  "priority": "high",
-  "dueDate": "2024-12-31T23:59:59.000Z"
-}
-```
-- **Response:**
-```json
-{
-  "success": true,
-  "message": "Task created",
-  "data": {
-    "_id": "taskId",
-    "title": "Complete project",
-    "description": "Finish the task management project",
-    "status": "pending",
-    "priority": "high",
-    "dueDate": "2024-12-31T23:59:59.000Z",
-    "order": 1,
-    "createdBy": "userId",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
-  }
-}
-```
+### User Routes
 
-#### 4. Get My Tasks
-- **Endpoint:** `GET /api/gettasks`
-- **Headers:** `Authorization: Bearer <token>`
-- **Description:** Get all tasks for the authenticated user with optional filters
-- **Query Parameters:**
-  - `status` (optional): Filter by status (`pending`, `in-progress`, `completed`)
-  - `priority` (optional): Filter by priority (`low`, `medium`, `high`)
-- **Examples:**
-  - `GET /api/gettasks` - Get all tasks
-  - `GET /api/gettasks?status=pending` - Get only pending tasks
-  - `GET /api/gettasks?priority=high` - Get only high priority tasks
-  - `GET /api/gettasks?status=pending&priority=high` - Get pending high priority tasks
-- **Response:**
-```json
-{
-  "success": true,
-  "count": 5,
-  "data": [
-    {
-      "_id": "taskId",
-      "title": "Task title",
-      "description": "Task description",
-      "status": "pending",
-      "priority": "medium",
-      "dueDate": "2024-12-31T23:59:59.000Z",
-      "order": 1,
-      "createdBy": "userId",
-      "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
-    }
-  ]
-}
-```
+- `GET /api/profile` - Get user profile
+- `PUT /api/profile` - Update user profile
+- `DELETE /api/account` - Delete user account
 
-#### 5. Update Task
-- **Endpoint:** `PUT /api/updatetask/:id`
-- **Headers:** `Authorization: Bearer <token>`
-- **Description:** Update a task (only if it belongs to the authenticated user)
-- **URL Parameters:** `id` - Task ID
-- **Request Body:** (any of these fields are optional)
-```json
-{
-  "title": "Updated title",
-  "description": "Updated description",
-  "status": "completed",
-  "priority": "low",
-  "dueDate": "2024-12-25T23:59:59.000Z",
-  "assignedTo": "anotherUserId"
-}
-```
-- **Response:**
-```json
-{
-  "success": true,
-  "message": "Task updated",
-  "data": {
-    "_id": "taskId",
-    "title": "Updated title",
-    "description": "Updated description",
-    "status": "completed",
-    "priority": "low",
-    "dueDate": "2024-12-25T23:59:59.000Z",
-    "completedAt": "2024-01-01T12:00:00.000Z",
-    "order": 1,
-    "createdBy": "userId",
-    "assignedTo": "anotherUserId",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T12:00:00.000Z"
-  }
-}
-```
+## 📋 Detailed API Documentation
 
-#### 6. Delete Task
-- **Endpoint:** `DELETE /api/deletetask/:id`
-- **Headers:** `Authorization: Bearer <token>`
-- **Description:** Delete a task (only if it belongs to the authenticated user)
-- **URL Parameters:** `id` - Task ID
-- **Response:**
-```json
-{
-  "success": true,
-  "message": "Task deleted"
-}
-```
+For complete API documentation including request/response examples, error handling, and usage examples, see [API_DOCUMENTATION.md](./API_DOCUMENTATION.md).
 
-#### 7. Reorder Tasks
-- **Endpoint:** `PUT /api/reorder/all`
-- **Headers:** `Authorization: Bearer <token>`
-- **Description:** Reorder multiple tasks (for drag and drop functionality)
-- **Request Body:**
-```json
-[
-  { "id": "taskId1", "order": 1 },
-  { "id": "taskId2", "order": 2 },
-  { "id": "taskId3", "order": 3 }
-]
-```
-- **Response:**
-```json
-{
-  "success": true,
-  "message": "Tasks reordered"
-}
-```
+## 🔧 Configuration
 
-#### 8. Get Task Days Count
-- **Endpoint:** `GET /api/taskdayscount/:id`
-- **Headers:** `Authorization: Bearer <token>`
-- **Description:** Get the number of days since a task was created or completed
-- **URL Parameters:** `id` - Task ID
-- **Logic:** 
-  - If task is completed, calculates days from `completedAt`
-  - If task is not completed, calculates days from `createdAt`
-- **Response:**
-```json
-{
-  "success": true,
-  "taskId": "6982ebafcd5e5d612e672388",
-  "status": "pending",
-  "days": 15
-}
-```
-- **Error Response:**
-```json
-{
-  "success": false,
-  "message": "Task not found"
-}
-```
+### MongoDB Connection
 
-## Error Responses
+The application uses Mongoose for MongoDB connection with the following features:
 
-### Authentication Errors
-```json
-{
-  "message": "No token provided"
-}
-```
-```json
-{
-  "message": "Invalid token"
-}
-```
+- Automatic reconnection
+- Connection pooling
+- Retry writes
+- Read preference
 
-### Validation Errors
-```json
-{
-  "success": false,
-  "message": "Task validation failed: title: Path `title` is required."
-}
-```
+### Express Middleware
 
-### Not Found Errors
-```json
-{
-  "success": false,
-  "message": "Task not found"
-}
-```
+- `express.json()` - JSON body parsing
+- `express.urlencoded()` - URL-encoded body parsing
+- `cors()` - Cross-Origin Resource Sharing
+- `cookie-session()` - Session management
+- Custom authentication middleware
 
-### Server Errors
-```json
-{
-  "success": false,
-  "message": "Internal server error message"
-}
-```
+## 🚀 Deployment
 
-## Usage Examples
+### Environment Setup
 
-### Complete Workflow
+1. **Production Environment Variables:**
+   ```env
+   NODE_ENV=production
+   MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/taskmanager
+   JWT_SECRET=production-secret-key
+   PORT=5000
+   ```
 
-1. **Signup:**
+2. **Build and Deploy:**
+   ```bash
+   # Install production dependencies
+   npm ci --only=production
+   
+   # Start the server
+   npm start
+   ```
+
+### Recommended Hosting
+
+- **Heroku** - Easy Node.js deployment
+- **AWS EC2** - Full control over environment
+- **DigitalOcean** - Affordable cloud hosting
+- **Vercel** - Serverless deployment
+- **Railway** - Modern deployment platform
+
+## 📊 Monitoring & Logging
+
+**Recommended additions:**
+
+- **Winston** - Structured logging
+- **Morgan** - HTTP request logging
+- **PM2** - Process management
+- **New Relic** - Performance monitoring
+- **Sentry** - Error tracking
+
+## 🔄 Database Seeding
+
+Use the provided seed script to populate the database with sample data:
+
 ```bash
-curl -X POST http://localhost:5000/api/signup \
-  -H "Content-Type: application/json" \
-  -d '{"name":"John Doe","username":"johndoe","email":"john@example.com","password":"password123"}'
+npm run seed
 ```
 
-2. **Login:**
-```bash
-curl -X POST http://localhost:5000/api/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"john@example.com","password":"password123"}'
-```
+## 🤝 Contributing
 
-3. **Create Task:**
-```bash
-curl -X POST http://localhost:5000/api/createtask \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"title":"My first task","description":"Task description","priority":"high"}'
-```
+1. Follow REST API best practices
+2. Write comprehensive tests
+3. Update API documentation
+4. Use semantic versioning
+5. Ensure security best practices
 
-4. **Get Tasks:**
-```bash
-curl -X GET http://localhost:5000/api/gettasks \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
+## 📝 License
 
-5. **Update Task:**
-```bash
-curl -X PUT http://localhost:5000/api/updatetask/TASK_ID \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"status":"completed"}'
-```
+This project is licensed under the MIT License.
 
-6. **Delete Task:**
-```bash
-curl -X DELETE http://localhost:5000/api/deletetask/TASK_ID \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
+---
 
-7. **Get Task Days Count:**
-```bash
-curl -X GET http://localhost:5000/api/taskdayscount/6982ebafcd5e5d612e672388 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-## Database Schema
-
-### Collections
-- **users:** Stores user information
-- **tasks:** Stores task information with references to users
-
-### Indexes
-- Users: `{ email: 1, username: 1 }`
-- Tasks: 
-  - `{ createdBy: 1, order: 1 }`
-  - `{ createdBy: 1, status: 1 }`
-  - `{ createdBy: 1, priority: 1 }`
-  - `{ createdBy: 1, dueDate: 1 }`
-
-## Environment Variables
-
-Create a `.env` file with:
-```
-JWT_SECRET=your-secret-key
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/taskmanager
-```
-
-## Features
-
-- ✅ User authentication with JWT
-- ✅ Task CRUD operations
-- ✅ Task filtering by status and priority
-- ✅ Task ordering and reordering
-- ✅ Task days count calculation
-- ✅ Automatic timestamps
-- ✅ Input validation
-- ✅ Error handling
-- ✅ Database indexing for performance
-- ✅ User-specific task isolation
+For the complete API documentation with examples, see [API_DOCUMENTATION.md](./API_DOCUMENTATION.md).

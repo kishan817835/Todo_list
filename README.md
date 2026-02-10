@@ -1,6 +1,6 @@
 # Todo List Application
 
-A full-stack Todo List application built with Angular (frontend) and Node.js (backend) with GraphQL API.
+A full-stack Todo List application built with Angular (frontend) and Node.js (backend) with RESTful API and MongoDB database.
 
 ## 🚀 Repository
 
@@ -10,25 +10,38 @@ A full-stack Todo List application built with Angular (frontend) and Node.js (ba
 
 - ✅ User Authentication (Login/Register)
 - ✅ Create, Read, Update, Delete Todos
-- ✅ GraphQL API for efficient data fetching
-- ✅ Responsive Angular frontend
-- ✅ RESTful backend with Express.js
+- ✅ RESTful API with Express.js
+- ✅ Responsive Angular frontend with Material Design
 - ✅ MongoDB database integration
+- ✅ Task filtering by status and priority
+- ✅ Task ordering and reordering (drag & drop)
+- ✅ Rich text editing with CKEditor
+- ✅ JWT authentication
+- ✅ SEO optimized frontend
+- ✅ Modern UI with Angular Material
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Angular** - Modern web framework
+- **Angular 21** - Modern web framework
 - **TypeScript** - Type-safe JavaScript
-- **HTML5/CSS3** - Markup and styling
+- **Angular Material** - UI component library
+- **CKEditor 5** - Rich text editor
+- **Quill** - Text editor
 - **RxJS** - Reactive programming
+- **Font Awesome** - Icons
+- **Vitest** - Testing framework
 
 ### Backend
 - **Node.js** - JavaScript runtime
-- **Express.js** - Web application framework
-- **GraphQL** - Query language for APIs
+- **Express.js 5** - Web application framework
 - **MongoDB** - NoSQL database
+- **Mongoose** - MongoDB object modeling
 - **JWT** - Authentication tokens
+- **bcryptjs** - Password hashing
+- **Passport** - Authentication middleware
+- **Google OAuth 2.0** - Social authentication
+- **Nodemailer** - Email sending
 
 ## 📁 Project Structure
 
@@ -42,17 +55,26 @@ Todo_list/
 │   │   │   ├── popup/       # Todo popup component
 │   │   │   ├── service/     # API services
 │   │   │   └── utils/       # Utility functions
-│   │   └── ...
+│   │   ├── assets/          # Static assets
+│   │   ├── environments/    # Environment configs
+│   │   └── index.html       # SEO optimized HTML
+│   ├── public/
+│   │   ├── robots.txt       # SEO robots file
+│   │   └── todo.svg         # App icon
 │   ├── package.json
-│   └── angular.json
+│   ├── angular.json
+│   └── vercel.json          # Deployment config
 ├── backend/                  # Node.js backend application
 │   ├── controller/          # Route controllers
 │   ├── middleware/          # Custom middleware
 │   ├── models/              # Data models
 │   ├── routes/              # API routes
 │   ├── config/              # Database configuration
+│   ├── utils/               # Utility functions
+│   ├── API_DOCUMENTATION.md # Detailed API docs
 │   ├── package.json
-│   └── server.js           # Server entry point
+│   ├── server.js           # Server entry point
+│   └── seed.js              # Database seeding
 ├── .gitignore              # Git ignore file
 └── README.md               # This file
 ```
@@ -60,9 +82,10 @@ Todo_list/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- Node.js (v18 or higher)
 - npm or yarn
 - MongoDB (local or cloud instance)
+- Git
 
 ### Installation
 
@@ -105,25 +128,41 @@ Todo_list/
 
 6. **Access the application:**
    - Frontend: http://localhost:4200
-   - Backend API: http://localhost:3000
+   - Backend API: http://localhost:5000
+   - API Documentation: See `backend/API_DOCUMENTATION.md`
 
 ## 🔧 Configuration
 
 ### Backend Environment Variables (.env)
 ```env
-MONGODB_URI=mongodb://localhost:27017/todo-app
+MONGODB_URI=mongodb://localhost:27017/taskmanager
 JWT_SECRET=your-jwt-secret-key
+PORT=5000
 GOOGLE_CLIENT_ID=your-google-oauth-client-id
 GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
-PORT=3000
 ```
+
+### Frontend Environment Variables (.env)
+```env
+API_URL=http://localhost:5000/api
+```
+
+## 🚀 Deployment
+
+### Frontend (Vercel)
+The frontend is configured for Vercel deployment with `vercel.json`.
+
+### Backend
+Deploy the backend to any Node.js hosting service (Heroku, AWS, DigitalOcean, etc.).
 
 ## 📱 Usage
 
 1. **Register a new account** or login with existing credentials
-2. **Create todos** using the add todo functionality
+2. **Create todos** using the add todo functionality with rich text editing
 3. **Manage todos** - mark as complete, edit, or delete
-4. **View all todos** in the main dashboard
+4. **Filter todos** by status (pending, in-progress, completed) and priority (low, medium, high)
+5. **Reorder todos** using drag and drop functionality
+6. **View task analytics** including days since creation/completion
 
 ## 🤝 Contributing
 
