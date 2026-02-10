@@ -224,7 +224,7 @@ export const getPublicTaskById = async (req, res) => {
       .populate('createdBy', 'name email');
 
     if (!task) {
-      return res.status(404).json({
+      return res.status(401).json({
         success: false,
         message: "Public task not found"
       });
