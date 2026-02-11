@@ -193,7 +193,7 @@
 
       <!-- Tasks Grid -->
       <div class="tasks-grid" *ngIf="!isLoading && filteredTasks.length > 0">
-        <div class="task-card" *ngFor="let task of filteredTasks" (click)="viewTaskDetail(task._id)">
+        <div class="task-card" [ngClass]="{'public-task': task.visibility === 'public'}" *ngFor="let task of filteredTasks" (click)="viewTaskDetail(task._id)">
           <div class="task-header">
             <div class="task-status" [ngClass]="getStatusClass(task.status)">
               {{ task.status }}
