@@ -4,11 +4,7 @@ import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
-
-router.use(auth);
-
-router.post("/send-mail", sendCustomMail);
-
+router.post("/send-mail", auth, sendCustomMail);
 
 
 export default router;

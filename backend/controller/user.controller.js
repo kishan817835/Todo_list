@@ -72,3 +72,34 @@ export const login = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const ForgetPasswordWithOldPassword = async (req, res) => {
+  const{password,newpassword,username,useremail}=req.body;
+
+  try{
+    const user = await User.findOne({ $or: [{ email: useremail }, { username }] });
+    if (!user)
+      return res.status(401).json({ message: "Invalid credentials" });
+    
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(401).json({ message: "Invalid credentials" });
+    
+    const hashedPassword = await bcrypt.hash(newpassword, 10);
+    
+    user.password = hashedPassword;
+    await user.save();
+    
+    res.json({
+      message: "Password updated successfully",
+    });
+    
+  }catch(err){
+    res.status(500).json({ error: err.message });
+  }
+
+  
+}
+
+
+

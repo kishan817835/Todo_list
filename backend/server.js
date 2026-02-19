@@ -5,6 +5,8 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/user.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import mailRoutes from "./routes/mail.routes.js";
+import { OTPMail,verifyEmailOTp } from "./controller/mail.controller.js";
+
 // import the function
 
 dotenv.config();
@@ -24,6 +26,9 @@ app.use(cors({
 
 app.use(express.json());
 
+app.post("/api/otp", OTPMail);
+app.post("/api/otppasswordchange",verifyEmailOTp)
+
 app.use("/api", userRoutes);
 app.use("/api", taskRoutes);
 app.use("/api", mailRoutes);
@@ -31,7 +36,6 @@ app.use("/api", mailRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
