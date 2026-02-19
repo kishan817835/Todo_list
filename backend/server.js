@@ -16,7 +16,7 @@ app.use(cors({
   origin: [
     
     'https://todo-list-steel-phi.vercel.app',
-    '*',
+    'http://localhost:4200',
   ],
   credentials: true
 }));
