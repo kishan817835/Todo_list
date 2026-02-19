@@ -1,30 +1,32 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import dotenv from "dotenv";
 dotenv.config();
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+const transporter = {
+  sendMail: async ({ from, to, subject, html, text }) => {
+    try {
+      const response = await resend.emails.send({
+        from: from || `"Upsoma Consultancy" <${process.env.EMAIL_FROM}>`,
+        to: [to],
+        subject,
+        html: html || text,
+      });
+      return response;
+    } catch (error) {
+      throw error;
+    }
   },
-  pool: true,
-  maxConnections: 1,
-  maxMessages: 5,
-  rateDelta: 1000,
-  rateLimit: 5
-});
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("Mail error:", error.message);
-    console.log("Check your .env file for EMAIL_USER and EMAIL_PASS");
-  } else {
-    console.log(" Mail server ready");
+  verify: (callback) => {
+    if (process.env.RESEND_API_KEY) {
+      callback(null, true);
+      console.log("✅ Resend email service ready");
+    } else {
+      callback(new Error("RESEND_API_KEY not found"), false);
+      console.log("❌ Add RESEND_API_KEY to your environment");
+    }
   }
-});
+};
 
 export default transporter;
