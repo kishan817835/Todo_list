@@ -29,7 +29,6 @@ export const sendCustomMail = async (req, res) => {
   }
 };
  
-
 export const OTPMail = async(req,res)=>{
 
   const {email}=req.body;
@@ -48,138 +47,84 @@ export const OTPMail = async(req,res)=>{
 
    await transporter.sendMail({
 
-  from: `"Upsoma Consultancy" <${process.env.EMAIL_USER}>`,
+  from: `"Upsoma Consultancy" <onboarding@resend.dev>`,
 
   to: email,
 
   subject: "ToDo List Password Change — Upsoma Consultancy",
 
-  html: `
-
-<!DOCTYPE html>
+  html: `<!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset OTP - Upsoma Consultancy</title>
 </head>
-
-<body style="margin:0; padding:0; background:#f0f4f3; font-family:Arial, sans-serif;">
-
-<table width="100%" cellpadding="0" cellspacing="0">
-<tr>
-<td align="center">
-
-<table width="600" cellpadding="0" cellspacing="0" style="
-background:#ffffff;
-margin:40px auto;
-border-radius:12px;
-overflow:hidden;
-box-shadow:0 4px 15px rgba(0,0,0,0.08);
-">
-
-<!-- HEADER -->
-<tr>
-<td align="center" style="
-background:linear-gradient(90deg,#cfe8dc,#b7d8c8);
-padding:25px;
-">
-
-<img src="http://todo-list-steel-phi.vercel.app/public/logo.png"
-alt="Upsoma Logo"
-width="60"
-style="margin-bottom:10px;">
-
-<h2 style="
-margin:0;
-color:#1b4332;
-">
-Upsoma Consultancy
-</h2>
-
-<p style="
-margin:5px 0 0;
-color:#2d6a4f;
-font-size:14px;
-">
-Secure Password Reset
-</p>
-
-</td>
-</tr>
-
-
-<!-- BODY -->
-<tr>
-<td style="padding:30px; text-align:center;">
-
-<p style="font-size:16px; color:#333;">
-Hello,
-</p>
-
-<p style="font-size:16px; color:#555;">
-Use the OTP below to change your ToDo List account password:
-</p>
-
-
-<!-- OTP BOX -->
-<div style="
-font-size:36px;
-letter-spacing:8px;
-font-weight:bold;
-color:#2d6a4f;
-background:#e6f4ea;
-padding:15px 25px;
-border-radius:8px;
-margin:25px auto;
-display:inline-block;
-border:1px solid #b7d8c8;
-">
-
-${otp}
-
-</div>
-
-
-<p style="color:#666; font-size:14px;">
-This OTP is valid for <b>5 minutes</b>.
-</p>
-
-<p style="color:#888; font-size:13px;">
-For security reasons, please do not share this OTP.
-</p>
-
-
-</td>
-</tr>
-
-
-<!-- FOOTER -->
-<tr>
-<td align="center" style="
-background:#f8f9fa;
-padding:20px;
-font-size:12px;
-color:#777;
-">
-
-© 2026 Upsoma Consultancy  
-<br>
-Web Development Services
-
-</td>
-</tr>
-
-
-</table>
-
-</td>
-</tr>
-</table>
-
+<body style="margin: 0; padding: 20px; background: linear-gradient(135deg, #f0f9f0 0%, #ffffff 100%); font-family: Arial, sans-serif;">
+    
+    <table width="100%" cellpadding="0" cellspacing="0" align="center" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        
+        <!-- Header -->
+        <tr>
+            <td style="background: linear-gradient(135deg, #d4f1d4 0%, #a8d5a8 100%); padding: 40px 30px; text-align: center;">
+                <h1 style="color: #2d5016; font-size: 28px; margin: 0 0 8px 0; font-weight: 700;">Upsoma Consultancy</h1>
+                <p style="color: #4a7c59; font-size: 16px; margin: 0; font-weight: 300;">Secure Password Reset Service</p>
+            </td>
+        </tr>
+        
+        <!-- Body -->
+        <tr>
+            <td style="padding: 50px 40px; text-align: center;">
+                <h2 style="font-size: 24px; color: #2d3748; margin: 0 0 20px 0; font-weight: 600;">Hello! 👋</h2>
+                <p style="font-size: 16px; color: #4a5568; margin: 0 0 35px 0; line-height: 1.8;">
+                    We received a request to reset your password for your ToDo List account. 
+                    Use the verification code below to proceed with creating your new password.
+                </p>
+                
+                <!-- OTP Container -->
+                <div style="background: #f0f9f0; border: 2px solid #a8d5a8; border-radius: 15px; padding: 30px; margin: 35px auto; max-width: 400px;">
+                    <div style="font-size: 14px; color: #4a7c59; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-weight: 600;">Your Verification Code</div>
+                    <div style="font-size: 42px; font-weight: 800; letter-spacing: 12px; color: #4a7c59; margin: 20px 0; font-family: 'Courier New', monospace;">${otp}</div>
+                    <div style="font-size: 14px; color: #4a7c59; margin-top: 20px;">
+                        ⏰ This code expires in <strong>5 minutes</strong>
+                    </div>
+                </div>
+                
+                <!-- Security Note -->
+                <div style="background: #f0f9f0; border-left: 4px solid #4a7c59; padding: 15px 20px; margin: 30px 0; border-radius: 8px; font-size: 14px; color: #2d5016; text-align: left;">
+                    <strong style="color: #2d5016;">🔒 Security Reminder:</strong> For your protection, never share this verification code 
+                    with anyone. Our team will never ask for your OTP via email, phone, or chat.
+                </div>
+                
+                <p style="font-size: 16px; color: #4a5568; margin: 0 0 35px 0; line-height: 1.8;">
+                    If you didn't request this password reset, you can safely ignore this email. 
+                    Your account remains secure.
+                </p>
+            </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+            <td style="background: #f0f9f0; padding: 30px; text-align: center; border-top: 1px solid #a8d5a8;">
+                <p style="color: #4a7c59; font-size: 14px; margin: 0 0 10px 0;">
+                    © 2026 Upsoma Consultancy | Web Development Services
+                </p>
+                <div style="display: flex; justify-content: center; gap: 20px; margin-top: 15px; flex-wrap: wrap;">
+                    <a href="https://www.upsoma.in/" style="color: #4a7c59; text-decoration: none; font-size: 13px; font-weight: 600;">Visit Our Website</a>
+                    <a href="#" style="color: #4a7c59; text-decoration: none; font-size: 13px;">Privacy Policy</a>
+                    <a href="#" style="color: #4a7c59; text-decoration: none; font-size: 13px;">Terms of Service</a>
+                    <a href="#" style="color: #4a7c59; text-decoration: none; font-size: 13px;">Contact Support</a>
+                </div>
+                <p style="color: #4a7c59; font-size: 12px; margin: 15px 0 0 0; font-style: italic;">
+                    Powered by ToDo List App - Upsoma Consultancy
+                </p>
+            </td>
+        </tr>
+        
+    </table>
+    
 </body>
-</html>
-
-`
+</html>`
 
 });
 

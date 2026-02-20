@@ -8,7 +8,7 @@ const transporter = {
   sendMail: async ({ from, to, subject, html, text }) => {
     try {
       const response = await resend.emails.send({
-        from: from || `"Upsoma Consultancy" <${process.env.EMAIL_FROM}>`,
+        from: from || `"Upsoma Consultancy" <onboarding@resend.dev>`,
         to: [to],
         subject,
         html: html || text,
