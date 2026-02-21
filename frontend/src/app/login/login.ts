@@ -92,6 +92,10 @@ if (this.loginData.login.includes('@')) {
   goToRegister() {
     this.router.navigate(['/register']);
   }
+
+  goToForgotPassword() {
+    this.router.navigate(['/forget-password']);
+  }
   closePopup() {
   this.showPopup = false;
   this.cdr.detectChanges();

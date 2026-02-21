@@ -5,6 +5,7 @@ import { AuthInterceptor } from '../app/allowed/auth';
 import { AuthGuard } from './allowed/auth.guard';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { TaskDetail } from './pages/task-detail/task-detail';
+import { ForgetPassword } from './forget-password/forget-password';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,10 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () => import('./register/register').then(m => m.Register)
+  },
+  {
+    path: 'forget-password',
+    loadComponent: () => import('./forget-password/forget-password').then(m => m.ForgetPassword)
   },
   {
     path: 'task/public/:id',

@@ -1,6 +1,5 @@
 <div class="dashboard-container">
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-  <!-- Header -->
   <header class="dashboard-header">
     <div class="header-left">
       <div class="logo">
@@ -25,7 +24,6 @@
       </div>
     </div>
     
-    <!-- Profile Section -->
     <div class="profile-section">
       <div class="profile-info" (click)="isProfileMenuOpen = !isProfileMenuOpen">
         <img [src]="'https://ui-avatars.com/api/?name=' + (userProfile?.name || 'User') + '&background=4f46e5&color=fff'" 
@@ -36,7 +34,6 @@
         </svg>
       </div>
       
-      <!-- Profile Dropdown -->
       <div class="profile-dropdown" *ngIf="isProfileMenuOpen">
         <div class="dropdown-header">
           <img [src]="'https://ui-avatars.com/api/?name=' + (userProfile?.name || 'User') + '&background=4f46e5&color=fff'" 
@@ -56,9 +53,7 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="dashboard-main">
-    <!-- Filters Section -->
     <div class="filters-section">
       <div class="filters-grid">
         <div class="filter-group">
@@ -92,7 +87,6 @@
       </div>
     </div>
 
-    <!-- Create Task Form -->
     <div class="create-task-section">
       <div class="create-task-card">
         <div style="display: flex;justify-content: space-between;">
@@ -167,22 +161,27 @@
       </div>
     </div>
 
-    <!-- Tasks List -->
     <div class="tasks-section">
       <div class="tasks-header">
         <h2>My Tasks</h2>
-        <div class="tasks-count">
-          {{ filteredTasks.length }} task{{ filteredTasks.length !== 1 ? 's' : '' }}
+        <div class="tasks-header-actions">
+          <button class="view-all-btn" (click)="viewAllTasks()" *ngIf="!showAllTasks">
+            View All
+          </button>
+          <button class="view-recent-btn" (click)="viewRecentTasks()" *ngIf="showAllTasks">
+            View Recent
+          </button>
+          <div class="tasks-count">
+            {{ filteredTasks.length }} task{{ filteredTasks.length !== 1 ? 's' : '' }}
+          </div>
         </div>
       </div>
 
-      <!-- Loading State -->
       <div *ngIf="isLoading" class="loading-state">
         <div class="loading-spinner"></div>
         <p>Loading tasks...</p>
       </div>
 
-      <!-- Empty State -->
       <div *ngIf="!isLoading && filteredTasks.length === 0" class="empty-state">
         <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -191,7 +190,6 @@
         <p>Create your first task to get started</p>
       </div>
 
-      <!-- Tasks Grid -->
       <div class="tasks-grid" *ngIf="!isLoading && filteredTasks.length > 0">
         <div class="task-card" [ngClass]="{'public-task': task.visibility === 'public'}" *ngFor="let task of filteredTasks" (click)="viewTaskDetail(task._id)">
           <div class="task-header">
@@ -245,18 +243,16 @@
                 {{ task.status === 'completed' ? 'Mark as Pending' : 'Mark Complete' }}
               </button>
               <div class="task-footer-add">
-  <p class="task-description" *ngIf="task.deadlineTime">
-    {{ task.deadlineTime }}
-  </p>
+                <p class="task-description" *ngIf="task.deadlineTime">
+                  {{ task.deadlineTime }}
+                </p>
 
-  <button class="btn-icon-small" (click)="getTaskDays(task._id); $event.stopPropagation()" *ngIf="!task.days">
-    <svg viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-    </svg>
-  </button>
-</div>
-
-
+                <button class="btn-icon-small" (click)="getTaskDays(task._id); $event.stopPropagation()" *ngIf="!task.days">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
               <span class="task-days" *ngIf="task.days">
                 {{ task.days }} day{{ task.days !== 1 ? 's' : '' }}
               </span>
@@ -275,7 +271,6 @@
   </main>
   
 
-  <!-- Edit Task Modal -->
   <div class="modal-overlay" *ngIf="editingTask">
     <div class="modal">
       <div class="modal-header">
@@ -335,7 +330,6 @@
     </div>
   </div>
 
-  <!-- Popup Message -->
   <div class="popup-overlay" *ngIf="showPopup">
     <div class="popup">
       <div class="popup-content">

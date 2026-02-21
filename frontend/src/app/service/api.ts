@@ -61,4 +61,20 @@ export class Api {
   Taskvisibility(taskId: string, payload: any): Observable<any> {
     return this.http.post(`${urlconstants.taskvisibility}`, payload);
   }
+  
+  sendOtp(payload: any): Observable<any> {
+    return this.http.post(urlconstants.sendOtp, payload);
+  }
+  
+  changePasswordWithCurrent(payload: any): Observable<any> {
+    return this.http.post(urlconstants.forgetPassword, payload);
+  }
+  
+  changePasswordWithOtp(payload: any): Observable<any> {
+    return this.http.post(urlconstants.changePasswordWithOtp, payload);
+  }
+  
+  post(url: string, payload: any): Observable<any> {
+    return this.http.post(url, payload);
+  }
 }

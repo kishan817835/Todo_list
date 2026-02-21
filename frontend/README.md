@@ -32,6 +32,12 @@ This is the frontend application built with Angular 21, TypeScript, and Angular 
 - ✅ **Form Validation** with Angular reactive forms
 - ✅ **Loading States** and error handling
 - ✅ **Accessibility** features
+- ✅ **Forgot Password** functionality with OTP support
+- ✅ **Password Recovery** via current password or OTP
+- ✅ **Email Integration** with Resend API
+- ✅ **Timer-based OTP** with 5-minute cooldown
+- ✅ **Attempt Tracking** with maximum 3 attempts
+- ✅ **Smart Validation** for email/username fields
 
 ## 📁 Project Structure
 
@@ -42,6 +48,7 @@ frontend/
 │   │   ├── components/       # Reusable components
 │   │   ├── login/           # Login component
 │   │   ├── register/        # Registration component
+│   │   ├── forget-password/  # Forgot password component
 │   │   ├── popup/           # Todo popup component
 │   │   ├── service/         # API services
 │   │   ├── utils/           # Utility functions

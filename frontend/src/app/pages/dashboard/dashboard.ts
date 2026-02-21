@@ -64,6 +64,7 @@ export class Dashboard {
   isLoading = false;
   showPopup = false;
   popupMessage = '';
+  showAllTasks = false;
   
   priorityOptions = [
     { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800' },
@@ -77,7 +78,6 @@ export class Dashboard {
     { value: 'completed', label: 'Completed', color: 'bg-green-100 text-green-800' }
   ];
   
-  // Quill editor configuration
   quillConfig = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
@@ -248,7 +248,6 @@ onMailToggle() {
   }
   
   viewTaskDetail(taskId: string) {
-    // Find the task to check its visibility
     const task = this.tasks.find(t => t._id === taskId);
     if (task) {
       if (task.visibility === 'public') {
@@ -267,7 +266,6 @@ onMailToggle() {
 
 
 TaskVisibility(task: Task) {
-  // Determine new visibility
   const newVisibility = task.visibility === 'public' ? 'private' : 'public';
   const payload = {
     taskId: task._id,
@@ -277,13 +275,11 @@ TaskVisibility(task: Task) {
   this.api.Taskvisibility(task._id, payload).subscribe({
     next: (response: any) => {
       if (response.success) {
-        // Update task in local array
         const index = this.tasks.findIndex(t => t._id === task._id);
         if (index !== -1) {
           this.tasks[index] = response.data;
           this.filteredTasks = [...this.tasks];
           this.showMessage('Task visibility updated successfully');
-          this.cdr.detectChanges();
         }
       }
     },
@@ -432,5 +428,30 @@ TaskVisibility(task: Task) {
   
   getPendingTasks() {
     return this.tasks.filter(task => task.status !== 'completed').length;
+  }
+  
+  viewAllTasks() {
+    this.showAllTasks = true;
+    this.isLoading = true;
+    
+    this.api.getTasks().subscribe({
+      next: (response: any) => {
+        this.tasks = response.data || [];
+        this.filteredTasks = [...this.tasks];
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading all tasks:', error);
+        this.showMessage('Failed to load all tasks');
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  
+  viewRecentTasks() {
+    this.showAllTasks = false;
+    this.loadRecentTasks();
   }
 }

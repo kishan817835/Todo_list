@@ -52,6 +52,26 @@
   box-shadow: 0 6px 18px rgba(0,0,0,0.18);
 }
 
+/* ================= FORGOT PASSWORD ================= */
+.forgot-password {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.forgot-link {
+  color: #4a7c59;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  color: #2d5016;
+  text-decoration: underline;
+}
+
 /* ================= FORM ================= */
 .sign-in-container form {
   width: 100%;
@@ -193,6 +213,7 @@ button {
 button.ghost {
   background: transparent;
   border-color: #fff;
+  cursor: pointer;
 }
 
 /* ================= MOBILE ================= */
@@ -306,6 +327,7 @@ button.ghost {
   color: #512da8;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
 }
 
 /* 📱 MOBILE ONLY */

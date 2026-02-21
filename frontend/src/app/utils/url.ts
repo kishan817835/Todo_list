@@ -16,4 +16,7 @@ export class urlconstants {
     static taskdayscount = this.serveapi + "/taskdayscount";
     static sendmail = this.serveapi + "/mail/send-mail";
     static taskvisibility = this.serveapi + "/task/visibility";
+    static sendOtp = this.serveapi + "/otp";
+    static forgetPassword = this.serveapi + "/forget-password";
+    static changePasswordWithOtp = this.serveapi + "/otppasswordchange";
 }

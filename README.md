@@ -19,6 +19,12 @@ A full-stack Todo List application built with Angular (frontend) and Node.js (ba
 - ✅ JWT authentication
 - ✅ SEO optimized frontend
 - ✅ Modern UI with Angular Material
+- ✅ **Forgot Password** functionality with OTP support
+- ✅ **Password Recovery** via current password or OTP
+- ✅ **Email Integration** with Resend API
+- ✅ **Timer-based OTP** with 5-minute cooldown
+- ✅ **Attempt Tracking** with maximum 3 attempts
+- ✅ **Smart Validation** for email/username fields
 
 ## 🛠️ Tech Stack
 
@@ -52,6 +58,7 @@ Todo_list/
 │   │   ├── app/
 │   │   │   ├── login/       # Login component
 │   │   │   ├── register/    # Registration component
+│   │   │   ├── forget-password/  # Forgot password component
 │   │   │   ├── popup/       # Todo popup component
 │   │   │   ├── service/     # API services
 │   │   │   └── utils/       # Utility functions
@@ -66,14 +73,27 @@ Todo_list/
 │   └── vercel.json          # Deployment config
 ├── backend/                  # Node.js backend application
 │   ├── controller/          # Route controllers
+│   │   ├── authController.js # Authentication logic
+│   │   ├── taskController.js # Task operations
+│   │   ├── userController.js # User management
+│   │   └── mailController.js # Email and OTP services
 │   ├── middleware/          # Custom middleware
+│   │   └── auth.js          # Authentication middleware
 │   ├── models/              # Data models
+│   │   ├── User.js         # User schema
+│   │   ├── Task.js         # Task schema
+│   │   └── otp.model.js     # OTP schema
 │   ├── routes/              # API routes
+│   │   ├── auth.js         # Authentication routes
+│   │   ├── tasks.js        # Task routes
+│   │   └── users.js        # User routes
 │   ├── config/              # Database configuration
+│   │   └── db.js           # MongoDB connection
 │   ├── utils/               # Utility functions
+│   │   └── helpers.js      # Helper functions
 │   ├── API_DOCUMENTATION.md # Detailed API docs
 │   ├── package.json
-│   ├── server.js           # Server entry point
+│   ├── server.js            # Server entry point
 │   └── seed.js              # Database seeding
 ├── .gitignore              # Git ignore file
 └── README.md               # This file

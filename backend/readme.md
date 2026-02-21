@@ -35,6 +35,11 @@ This backend provides a comprehensive API for task management with features like
 - ✅ **User Isolation** for data security
 - ✅ **Session Management** with cookies
 - ✅ **Email Notifications** support
+- ✅ **OTP System** for password recovery
+- ✅ **Resend API Integration** for reliable email delivery
+- ✅ **Password Recovery** via current password or OTP
+- ✅ **Attempt Tracking** with maximum 3 attempts
+- ✅ **Email Templates** with modern HTML design
 - ✅ **API Documentation** with examples
 
 ## 📁 Project Structure
@@ -44,12 +49,14 @@ backend/
 ├── controller/              # Route controllers
 │   ├── authController.js   # Authentication logic
 │   ├── taskController.js   # Task operations
-│   └── userController.js   # User management
+│   ├── userController.js   # User management
+│   └── mailController.js   # Email and OTP services
 ├── middleware/              # Custom middleware
 │   └── auth.js            # Authentication middleware
 ├── models/                 # Data models
 │   ├── User.js            # User schema
-│   └── Task.js            # Task schema
+│   ├── Task.js            # Task schema
+│   └── otp.model.js        # OTP schema
 ├── routes/                 # API routes
 │   ├── auth.js            # Authentication routes
 │   ├── tasks.js           # Task routes
@@ -231,6 +238,8 @@ npm run test:coverage
 - `POST /api/login` - User login
 - `POST /api/google` - Google OAuth
 - `GET /api/logout` - User logout
+- `POST /api/otp` - Send OTP for password recovery
+- `POST /api/otppasswordchange` - Change password with OTP
 
 ### Task Routes
 
