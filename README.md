@@ -48,6 +48,7 @@ A full-stack Todo List application built with Angular (frontend) and Node.js (ba
 - **Passport** - Authentication middleware
 - **Google OAuth 2.0** - Social authentication
 - **Nodemailer** - Email sending
+- **Resend API** - Modern email delivery service
 
 ## 📁 Project Structure
 
@@ -94,7 +95,9 @@ Todo_list/
 │   ├── API_DOCUMENTATION.md # Detailed API docs
 │   ├── package.json
 │   ├── server.js            # Server entry point
-│   └── seed.js              # Database seeding
+│   ├── seed.js              # Database seeding
+│   ├── .env.example         # Environment variables template
+│   └── .env                 # Environment variables (not tracked)
 ├── .gitignore              # Git ignore file
 └── README.md               # This file
 ```
@@ -128,9 +131,21 @@ Todo_list/
    ```
 
 4. **Environment Setup:**
-   - Create a `.env` file in the `backend` directory
-   - Add your MongoDB connection string and JWT secret
-   - Configure Google OAuth credentials (if using OAuth)
+   ```bash
+   # Navigate to backend directory
+   cd backend
+   
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Edit .env with your configuration
+   # - Add your MongoDB Atlas connection string
+   # - Set JWT secret key
+   # - Add Google OAuth credentials
+   # - Configure Resend API key
+   # - Set cookie secret key
+   # - Set frontend URL
+   ```
 
 5. **Start the application:**
    

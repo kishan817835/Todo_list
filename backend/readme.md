@@ -17,6 +17,7 @@ This backend provides a comprehensive API for task management with features like
 - **Passport** - Authentication middleware
 - **Google OAuth 2.0** - Social authentication
 - **Nodemailer** - Email sending
+- **Resend API** - Modern email delivery service
 - **Cookie-session** - Session management
 - **CORS** - Cross-Origin Resource Sharing
 - **dotenv** - Environment variable management
@@ -69,6 +70,7 @@ backend/
 ├── package.json           # Dependencies and scripts
 ├── server.js              # Server entry point
 ├── seed.js                # Database seeding
+├── .env.example           # Environment variables template
 └── .env                   # Environment variables
 ```
 
@@ -101,32 +103,51 @@ backend/
 
 ### Environment Variables
 
-Create a `.env` file with the following variables:
+Create a `.env` file using the provided template:
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+```
+
+**Required Environment Variables:**
 
 ```env
-# Database
-MONGODB_URI=mongodb://localhost:27017/taskmanager
-
-# Server
+# Server Configuration
 PORT=5000
 
-# Authentication
+# Database Configuration
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/
+
+# JWT Configuration
 JWT_SECRET=your-super-secret-jwt-key-here
-JWT_EXPIRE=7d
 
-# Google OAuth (Optional)
-GOOGLE_CLIENT_ID=your-google-oauth-client-id
-GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
+# Cookie Configuration
+COOKIE_KEY=your-random-secret-key-here
 
-# Email (Optional)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 
-# Frontend URL
+# Email Configuration (Resend API)
+RESEND_API_KEY=re_your-resend-api-key-here
+EMAIL_FROM=your-email@gmail.com
+
+# CORS Configuration
 FRONTEND_URL=http://localhost:4200
+
+# Environment
+NODE_ENV=development
 ```
+
+**Important Notes:**
+- **MONGO_URI**: Update with your MongoDB Atlas connection string
+- **JWT_SECRET**: Use a strong, unique secret key
+- **COOKIE_KEY**: Use a random secret key for sessions
+- **GOOGLE_CLIENT_ID/SECRET**: Get from Google Cloud Console
+- **RESEND_API_KEY**: Get from Resend dashboard
+- **EMAIL_FROM**: Must match your verified Resend domain
+- **FRONTEND_URL**: Update with your frontend URL
 
 ### Running the Server
 
