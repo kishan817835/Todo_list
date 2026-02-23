@@ -1,12 +1,624 @@
-# Task Management API Documentation
+# 📚 Backend API Documentation
 
-## Table of Contents
-1. [Authentication](#authentication)
-2. [Task Management](#task-management)
-3. [Task Visibility](#task-visibility)
-4. [Public Task Access](#public-task-access)
-5. [Error Responses](#error-responses)
-6. [Data Models](#data-models)
+## 🚀 Overview
+
+TaskMaster Backend API - RESTful API for task management with authentication, email notifications, and real-time updates.
+
+## 🔗 Base URL
+
+```
+Development: http://localhost:5000/api
+Production: https://your-domain.com/api
+```
+
+## 🔐 Authentication
+
+### JWT Token Required
+All protected endpoints require a valid JWT token in the Authorization header:
+
+```http
+Authorization: Bearer <your-jwt-token>
+```
+
+## 📋 Endpoints
+
+### Authentication Routes (`/api/auth`)
+
+#### User Registration
+```http
+POST /api/auth/createaccount
+```
+
+**Request Body:**
+```json
+{
+  "name": "John Doe",
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "user": { ... },
+    "token": "jwt-token-here"
+  }
+}
+```
+
+#### User Login
+```http
+POST /api/auth/login
+```
+
+**Request Body:**
+```json
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": { ... },
+    "token": "jwt-token-here"
+  }
+}
+```
+
+#### Send OTP
+```http
+POST /api/auth/sendOtp
+```
+
+**Request Body:**
+```json
+{
+  "email": "john@example.com"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "OTP sent successfully"
+}
+```
+
+#### Reset Password with OTP
+```http
+POST /api/auth/changePasswordWithOtp
+```
+
+**Request Body:**
+```json
+{
+  "email": "john@example.com",
+  "otp": "123456",
+  "newPassword": "newpassword123"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Password reset successful"
+}
+```
+
+### Task Routes (`/api/tasks`)
+
+#### Create Task
+```http
+POST /api/tasks
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+  "title": "Complete project documentation",
+  "description": "<p>Detailed task description with rich text</p>",
+  "priority": "high",
+  "dueDate": "2024-12-31",
+  "deadlineTime": "18:00",
+  "multipleEmails": ["user1@example.com", "user2@example.com"],
+  "visibility": "private"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Task created successfully",
+  "data": {
+    "_id": "task-id-here",
+    "title": "Complete project documentation",
+    "description": "<p>Detailed task description</p>",
+    "priority": "high",
+    "status": "pending",
+    "dueDate": "2024-12-31",
+    "deadlineTime": "18:00",
+    "multipleEmails": ["user1@example.com", "user2@example.com"],
+    "visibility": "private",
+    "createdBy": "user-id",
+    "order": 1,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
+
+#### Get Recent Tasks
+```http
+GET /api/tasks/recent
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Query Parameters:**
+- `status` (optional): Filter by status (pending, in-progress, completed)
+- `priority` (optional): Filter by priority (low, medium, high)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "task-id",
+      "title": "Task title",
+      "description": "Task description",
+      "priority": "high",
+      "status": "pending",
+      "dueDate": "2024-12-31",
+      "deadlineTime": "18:00",
+      "multipleEmails": ["email@example.com"],
+      "visibility": "private",
+      "days": 5,
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "counts": {
+    "total": 10,
+    "pending": 6,
+    "completed": 4
+  }
+}
+```
+
+#### Get Task by ID
+```http
+GET /api/tasks/:id
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "task-id",
+    "title": "Task title",
+    "description": "Task description",
+    "priority": "high",
+    "status": "pending",
+    "dueDate": "2024-12-31",
+    "deadlineTime": "18:00",
+    "multipleEmails": ["email1@example.com", "email2@example.com"],
+    "visibility": "private",
+    "days": 5,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "completedAt": null
+  }
+}
+```
+
+#### Get Public Task by ID
+```http
+GET /api/tasks/public/:id
+```
+
+**No authentication required**
+
+**Response:** Same as private task but only if visibility is "public"
+
+#### Update Task
+```http
+PUT /api/tasks/:id
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:** (any of the following fields)
+```json
+{
+  "title": "Updated task title",
+  "description": "Updated description",
+  "priority": "medium",
+  "status": "completed",
+  "dueDate": "2024-12-25",
+  "deadlineTime": "17:00",
+  "visibility": "public",
+  "completedAt": "2024-01-15T10:30:00.000Z"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Task updated successfully",
+  "data": { /* updated task object */ }
+}
+```
+
+#### Delete Task
+```http
+DELETE /api/tasks/:id
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Task deleted successfully"
+}
+```
+
+#### Reorder Tasks
+```http
+PUT /api/tasks/reorder
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+[
+  { "id": "task-id-1", "order": 1 },
+  { "id": "task-id-2", "order": 2 },
+  { "id": "task-id-3", "order": 3 }
+]
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Tasks reordered successfully"
+}
+```
+
+#### Update Task Visibility
+```http
+POST /api/tasks/visibility
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+  "taskId": "task-id-here",
+  "visibility": "public"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Task visibility updated successfully",
+  "data": { /* updated task object */ }
+}
+```
+
+#### Get Task Days Count
+```http
+GET /api/tasks/:id/days
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response:**
+```json
+{
+  "success": true,
+  "days": 5,
+  "message": "5 days remaining"
+}
+```
+
+### Email Routes (`/api/mail`)
+
+#### Send Manual Reminder
+```http
+POST /api/mail/send-reminder
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+  "taskId": "task-id-here"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Reminder sent successfully"
+}
+```
+
+#### Get Task Days Remaining (Email Endpoint)
+```http
+GET /api/mail/task/:id/days
+```
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response:**
+```json
+{
+  "success": true,
+  "days": 3,
+  "message": "3 days remaining until deadline"
+}
+```
+
+## 📊 Data Models
+
+### Task Model
+```json
+{
+  "_id": "string (ObjectId)",
+  "title": "string (required)",
+  "description": "string (HTML)",
+  "priority": "string (low|medium|high)",
+  "status": "string (pending|in-progress|completed)",
+  "dueDate": "string (YYYY-MM-DD)",
+  "deadlineTime": "string (HH:mm)",
+  "multipleEmails": ["string (email addresses)"],
+  "visibility": "string (public|private)",
+  "createdBy": "string (ObjectId)",
+  "order": "number",
+  "days": "number (calculated)",
+  "createdAt": "string (ISO date)",
+  "completedAt": "string (ISO date, optional)"
+}
+```
+
+### User Model
+```json
+{
+  "_id": "string (ObjectId)",
+  "name": "string (required)",
+  "username": "string (required, unique)",
+  "email": "string (required, unique)",
+  "password": "string (hashed, required)",
+  "role": "string (user|admin)",
+  "createdAt": "string (ISO date)"
+}
+```
+
+### OTP Model
+```json
+{
+  "_id": "string (ObjectId)",
+  "email": "string (required)",
+  "otp": "string (6-digit)",
+  "expiresAt": "string (ISO date)",
+  "createdAt": "string (ISO date)"
+}
+```
+
+## 🔒 Error Handling
+
+### Standard Error Response Format
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "error": "Detailed error information (optional)"
+}
+```
+
+### Common HTTP Status Codes
+- `200` - Success
+- `201` - Created
+- `400` - Bad Request
+- `401` - Unauthorized
+- `403` - Forbidden
+- `404` - Not Found
+- `500` - Internal Server Error
+
+### Error Messages
+- `"User already exists"` - Registration with existing email
+- `"Invalid credentials"` - Wrong email/password
+- `"Task not found"` - Task doesn't exist
+- `"Access denied"` - No permission to access resource
+- `"Validation error"` - Required fields missing
+- `"Server error"` - Internal server error
+
+## 🛡️ Security Features
+
+### Authentication
+- **JWT Tokens**: Secure session management
+- **Password Hashing**: Bcrypt encryption
+- **Token Expiration**: Configurable token lifetime
+- **Rate Limiting**: Prevent brute force attacks
+
+### Data Validation
+- **Input Sanitization**: XSS protection
+- **Schema Validation**: Mongoose validation
+- **File Upload Security**: Safe file handling
+- **SQL Injection Prevention**: NoSQL injection protection
+
+### CORS Configuration
+```javascript
+{
+  origin: ["http://localhost:4200", "https://your-domain.com"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}
+```
+
+## 📧 Email System
+
+### SMTP Configuration
+```javascript
+{
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+}
+```
+
+### Email Templates
+- **Task Reminder**: Professional HTML email with task details
+- **Multiple Recipients**: Send to multiple email addresses
+- **Deadline Alerts**: Automatic reminders before due date
+- **Custom Templates**: Editable email content
+
+### Email Features
+- **Rich HTML Templates**: Beautiful email formatting
+- **Task Details**: Complete task information
+- **Multiple Recipients**: Send to multiple emails
+- **Error Handling**: Failed email tracking
+- **Scheduling**: Cron-based automatic reminders
+
+## 🔄 Real-time Features
+
+### Automatic Email Reminders
+- **Cron Job**: Runs every minute
+- **Time Window**: ±1 minute from deadline
+- **Duplicate Prevention**: Track sent emails
+- **Multiple Recipients**: Send to all configured emails
+
+### Task Statistics
+- **Real-time Counts**: Total, pending, completed tasks
+- **Dynamic Updates**: Live dashboard statistics
+- **User-specific**: Personal task counts
+- **Performance Metrics**: Task completion rates
+
+## 🚀 Deployment
+
+### Environment Variables
+```env
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/taskmaster
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=7d
+
+# Email Service
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+EMAIL_FROM=noreply@taskmaster.com
+
+# Security
+BCRYPT_ROUNDS=12
+RATE_LIMIT_WINDOW=15
+RATE_LIMIT_MAX=100
+```
+
+### Production Setup
+```bash
+# Install dependencies
+npm install
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# With PM2 (recommended)
+pm2 start ecosystem.config.js
+```
+
+### Docker Support
+```dockerfile
+FROM node:16-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 5000
+CMD ["npm", "start"]
+```
+
+## 📈 Performance
+
+### Database Optimization
+- **Indexing**: Optimized queries with indexes
+- **Connection Pooling**: Efficient database connections
+- **Caching**: Redis for frequent queries
+- **Pagination**: Large dataset handling
+
+### API Performance
+- **Compression**: Gzip response compression
+- **Rate Limiting**: Prevent abuse
+- **Logging**: Comprehensive error logging
+- **Monitoring**: Health check endpoints
+
+## 🧪 Testing
+
+### Test Endpoints
+- **Unit Tests**: Individual function testing
+- **Integration Tests**: API endpoint testing
+- **E2E Tests**: Complete workflow testing
+- **Load Testing**: Performance under load
+
+### Test Data
+```javascript
+// Sample task for testing
+{
+  "title": "Test Task",
+  "description": "<p>This is a test task</p>",
+  "priority": "medium",
+  "dueDate": "2024-12-31",
+  "deadlineTime": "18:00",
+  "multipleEmails": ["test@example.com"],
+  "visibility": "private"
+}
+```
+
+---
+
+**TaskMaster Backend API** - Comprehensive API Documentation 📚✨
 
 ---
 

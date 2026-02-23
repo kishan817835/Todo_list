@@ -1,12 +1,272 @@
-# Todo List Application
+# 📋 TaskMaster - Professional Task Management System
 
-A full-stack Todo List application built with Angular (frontend) and Node.js (backend) with RESTful API and MongoDB database.
+A modern, feature-rich task management application with email notifications, multiple user support, and real-time updates.
+
+## ✨ Features
+
+### 🎯 Core Features
+- **Task Management**: Create, update, delete, and organize tasks
+- **Priority Levels**: Low, Medium, High priority tasks
+- **Status Tracking**: Pending, In Progress, Completed
+- **Due Dates**: Set deadlines and track time remaining
+- **Task Visibility**: Public/Private task sharing
+
+### 📧 Email Notifications
+- **Multiple Email Support**: Send reminders to multiple recipients
+- **Smart Email Management**: Save and reuse email lists
+- **Conditional Notifications**: Only send when mail notification is enabled
+- **Professional Templates**: Beautiful email reminders with task details
+
+### 🎨 User Interface
+- **Modern Design**: Clean, professional UI with gradients
+- **Mobile Responsive**: App-like experience on all devices
+- **Global Loader**: Smooth loading states for all operations
+- **Real-time Updates**: Instant UI feedback
+
+### 🔒 Security & Authentication
+- **JWT Authentication**: Secure user login/logout
+- **Protected Routes**: Private task access control
+- **Public Task Sharing**: Share tasks with external users
+- **Secure Storage**: Encrypted local data storage
+
+## 🏗️ Architecture
+
+### Backend (Node.js + Express)
+```
+backend/
+├── config/
+│   └── db.js              # MongoDB configuration
+├── controller/
+│   ├── task.controller.js  # Task CRUD operations
+│   ├── user.controller.js  # User authentication
+│   └── mail.controller.js # Email notifications
+├── middleware/
+│   └── auth.js           # JWT authentication
+├── models/
+│   ├── task.model.js      # Task schema
+│   ├── user.model.js      # User schema
+│   └── otp.model.js       # OTP verification
+└── server.js             # Express server setup
+```
+
+### Frontend (Angular + TypeScript)
+```
+frontend/src/app/
+├── components/
+│   └── loader/           # Global loading component
+├── pages/
+│   ├── dashboard/         # Main task management
+│   └── task-detail/      # Individual task view
+├── services/
+│   ├── api.ts            # API service
+│   └── loader.service.ts # Loading state management
+├── utils/
+│   └── url.ts           # API endpoints
+└── secure-ls.ts         # Secure local storage
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 16+
+- MongoDB
+- Angular CLI
+- Nodemailer configured email service
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/kishan817835/Todo_list.git
+cd Todo_list
+```
+
+2. **Backend Setup**
+```bash
+cd backend
+npm install
+```
+
+3. **Configure Environment Variables**
+```bash
+cp .env.example .env
+# Edit .env with your MongoDB and email credentials
+```
+
+4. **Start Backend Server**
+```bash
+npm run dev
+```
+
+5. **Frontend Setup**
+```bash
+cd frontend
+npm install
+```
+
+6. **Start Frontend Development Server**
+```bash
+ng serve
+```
+
+## 📱 Usage
+
+### Creating Tasks
+1. Fill in task title, description, priority, and due date
+2. Enable "Get Notification On Mail" for email reminders
+3. Add multiple emails for group notifications
+4. Click "Create Task"
+
+### Managing Tasks
+- **View Tasks**: Dashboard shows all tasks with filters
+- **Edit Tasks**: Click edit button to modify task details
+- **Delete Tasks**: Remove unwanted tasks with confirmation
+- **Status Updates**: Mark tasks as complete/pending
+- **Share Tasks**: Make tasks public for external access
+
+### Email Notifications
+- **Setup**: Configure email service in backend
+- **Multiple Recipients**: Add multiple emails for group reminders
+- **Smart Timing**: Automatic reminders before deadline
+- **Professional Templates**: Beautiful email formatting
+
+## 🔧 Configuration
+
+### Backend Environment Variables
+```env
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/taskmaster
+
+# JWT
+JWT_SECRET=your-secret-key
+
+# Email Service
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+```
+
+### Frontend Configuration
+- Update API endpoints in `frontend/src/app/utils/url.ts`
+- Configure secure storage settings in `secure-ls.ts`
+
+## 📊 API Documentation
+
+### Authentication Endpoints
+- `POST /api/auth/createaccount` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/sendOtp` - Send OTP
+- `POST /api/auth/changePasswordWithOtp` - Reset password
+
+### Task Endpoints
+- `POST /api/tasks` - Create task
+- `GET /api/tasks/recent` - Get recent tasks
+- `GET /api/tasks/:id` - Get task by ID
+- `PUT /api/tasks/:id` - Update task
+- `DELETE /api/tasks/:id` - Delete task
+- `PUT /api/tasks/reorder` - Reorder tasks
+- `POST /api/tasks/visibility` - Update task visibility
+
+### Email Endpoints
+- `POST /api/mail/send-reminder` - Send manual reminder
+- `GET /api/mail/task/:id/days` - Get task days remaining
+
+## 🎨 UI Components
+
+### Dashboard Features
+- **Task Cards**: Beautiful card-based task display
+- **Filters**: Status and priority filtering
+- **Quick Actions**: Inline task operations
+- **Statistics**: Real-time task counts
+- **Email Management**: Multiple email interface
+
+### Task Detail Page
+- **Complete Information**: All task details in one view
+- **Email Display**: Show all notification recipients
+- **Status Management**: Quick status updates
+- **Navigation**: Easy back navigation
+
+### Mobile Experience
+- **Responsive Design**: App-like mobile interface
+- **Touch Optimized**: Large touch targets
+- **Smooth Animations**: Native-like transitions
+- **Performance**: Optimized for mobile devices
+
+## 🔒 Security Features
+
+### Authentication
+- **JWT Tokens**: Secure session management
+- **Password Hashing**: Bcrypt encryption
+- **OTP Verification**: Secure password reset
+- **Protected Routes**: API endpoint security
+
+### Data Protection
+- **Input Validation**: Comprehensive form validation
+- **XSS Protection**: Sanitized user inputs
+- **Secure Storage**: Encrypted local data
+- **CORS Configuration**: Proper cross-origin setup
+
+## 📧 Email System
+
+### Features
+- **Multiple Recipients**: Send to multiple emails
+- **Template System**: Professional email templates
+- **Scheduling**: Automatic deadline reminders
+- **Error Handling**: Robust email error management
+
+### Configuration
+- **SMTP Setup**: Gmail/Outlook/Custom SMTP
+- **Template Customization**: Editable email templates
+- **Timing Control**: Configurable reminder schedules
+
+## 🚀 Deployment
+
+### Backend Deployment
+```bash
+cd backend
+npm run build
+npm start
+```
+
+### Frontend Deployment
+```bash
+cd frontend
+ng build --prod
+# Deploy dist/ folder to your web server
+```
+
+### Environment Setup
+- **Development**: Local development with hot reload
+- **Production**: Optimized build for deployment
+- **Docker**: Containerized deployment support
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Support
+
+For support and questions:
+- Create an issue in the repository
+- Check the API documentation
+- Review the configuration guide
+
+---
+
+**TaskMaster** - Professional Task Management Made Simple 📋✨
 
 ## 🚀 Repository
 
 **GitHub Repository:** https://github.com/kishan817835/Todo_list.git
-
-## 📋 Features
 
 - ✅ User Authentication (Login/Register)
 - ✅ Create, Read, Update, Delete Todos
