@@ -6,6 +6,209 @@ import {OTP} from "../models/otp.model.js";
 
 const sentEmailsToday = new Set();
 
+// Email Queue System - FIFO
+class EmailQueue {
+  constructor() {
+    this.queue = [];
+    this.isProcessing = false;
+    this.processingInterval = null;
+  }
+
+  // Add emails to queue
+  add(emails, task) {
+    console.log(`📥 Adding ${emails.length} emails to queue for task: ${task.title}`);
+    
+    for (const email of emails) {
+      this.queue.push({
+        email,
+        task,
+        timestamp: new Date(),
+        taskId: task._id,
+        taskTitle: task.title
+      });
+    }
+    
+    console.log(`📊 Queue size: ${this.queue.length} emails`);
+    
+    // Start processing if not already running
+    if (!this.isProcessing) {
+      this.startProcessing();
+    }
+  }
+
+  // Start processing queue
+  async startProcessing() {
+    if (this.isProcessing) return;
+    
+    this.isProcessing = true;
+    console.log(`🚀 Starting email queue processing...`);
+    
+    // Process 1 email every second
+    this.processingInterval = setInterval(async () => {
+      if (this.queue.length === 0) {
+        this.stopProcessing();
+        return;
+      }
+      
+      const emailItem = this.queue.shift(); // FIFO - First In First Out
+      await this.sendEmail(emailItem);
+    }, 1000); // 1 second delay
+  }
+
+  // Send individual email
+  async sendEmail(emailItem) {
+    try {
+      console.log(`📧 Sending to: ${emailItem.email} (Queue: ${this.queue.length} remaining)`);
+      
+      await transporter.sendMail({
+        from: '"Upsoma Consultancy" <noreply@upsoma.in>',
+        to: emailItem.email,
+        subject: `Task Reminder: ${emailItem.taskTitle} — Upsoma Consultancy`,
+        replyTo: 'support@upsoma.in',
+        headers: {
+          'X-Priority': '3',
+          'X-Mailer': 'Upsoma Consultancy Mailer',
+          'List-Unsubscribe': '<mailto:unsubscribe@upsoma.in>'
+        },
+        html: this.generateEmailTemplate(emailItem.task)
+      });
+      
+      console.log(`✅ Email sent to: ${emailItem.email}`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to send to ${emailItem.email}:`, error.message);
+    }
+  }
+
+  // Generate email template
+  generateEmailTemplate(task) {
+    return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Reminder - Upsoma Consultancy</title>
+</head>
+
+<body style="margin:0;padding:20px;background:linear-gradient(135deg,#f0f9f0 0%,#ffffff 100%);font-family:Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" align="center"
+style="max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+
+<tr>
+<td style="background:linear-gradient(135deg,#d4f1d4 0%,#a8d5a8 100%);padding:40px 30px;text-align:center;">
+
+<h1 style="color:#2d5016;font-size:28px;margin:0 0 8px 0;font-weight:700;">
+Upsoma Consultancy
+</h1>
+
+<p style="color:#4a7c59;font-size:16px;margin:0;font-weight:300;">
+Task Reminder Service
+</p>
+
+</td>
+</tr>
+
+<tr>
+<td style="padding:50px 40px;text-align:center;">
+
+<h2 style="font-size:24px;color:#2d3748;margin:0 0 20px 0;font-weight:600;">
+Task Reminder ⏰
+</h2>
+
+<div style="background:#f0f9f0;border:2px solid #a8d5a8;border-radius:15px;padding:30px;margin:35px auto;max-width:500px;text-align:left;">
+
+<h3 style="color:#2d5016;font-size:20px;margin:0 0 15px 0;font-weight:600;">
+${task.title}
+</h3>
+
+<p style="color:#4a5568;font-size:16px;margin:0 0 20px 0;line-height:1.6;">
+${task.description || 'No description provided'}
+</p>
+
+<table style="width:100%;border-collapse:collapse;">
+<tr>
+<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
+<strong style="color:#4a7c59;">Priority:</strong> 
+<span style="color:#2d3748;">${task.priority || 'Medium'}</span>
+</td>
+</tr>
+<tr>
+<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
+<strong style="color:#4a7c59;">Due Date:</strong> 
+<span style="color:#2d3748;">${task.dueDate || 'Not set'}</span>
+</td>
+</tr>
+${task.deadlineTime ? `
+<tr>
+<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
+<strong style="color:#4a7c59;">Time:</strong> 
+<span style="color:#2d3748;">${task.deadlineTime}</span>
+</td>
+</tr>
+` : ''}
+${task.days ? `
+<tr>
+<td style="padding:10px 0;">
+<strong style="color:#28a745;">Days Remaining:</strong> 
+<span style="color:#28a745;font-weight:600;">${task.days} day${task.days !== 1 ? 's' : ''}</span>
+</td>
+</tr>
+` : ''}
+</table>
+
+</div>
+
+<p style="color:#718096;font-size:14px;margin:20px 0 0 0;">
+Don't forget to complete your task on time! 🚀
+</p>
+
+</td>
+</tr>
+
+<tr>
+<td style="background:#f0f9f0;padding:30px;text-align:center;">
+
+<p style="color:#4a7c59;font-size:14px;margin:0;">
+© 2024 Upsoma Consultancy
+</p>
+<p style="color:#6c757d;margin:5px 0 0 0;font-size:11px;">
+This is an automated reminder. Please reply if you have any questions.
+</p>
+
+</td>
+</tr>
+
+</table>
+
+</body>
+
+</html>`;
+  }
+
+  // Stop processing
+  stopProcessing() {
+    if (this.processingInterval) {
+      clearInterval(this.processingInterval);
+      this.processingInterval = null;
+    }
+    this.isProcessing = false;
+    console.log(`⏹️ Email queue processing stopped. Queue empty.`);
+  }
+
+  // Get queue status
+  getStatus() {
+    return {
+      queueLength: this.queue.length,
+      isProcessing: this.isProcessing,
+      nextEmail: this.queue[0] ? this.queue[0].email : null
+    };
+  }
+}
+
+// Global email queue instance
+const emailQueue = new EmailQueue();
+
 const resetEmailTracking = () => {
   const now = new Date();
   const istNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
@@ -349,9 +552,7 @@ export const remainderSendOnEmail = async (req, res) => {
 
   const currentMinutes = istNow.getHours() * 60 + istNow.getMinutes();
 
-  const minRange = currentMinutes - 1;
-  const maxRange = currentMinutes + 1;
-
+  // Send email only at exact time, not before or after
   const tasks = await Task.find({
     status: "pending",
     deadlineTime: { $ne: "" }
@@ -371,7 +572,8 @@ export const remainderSendOnEmail = async (req, res) => {
 
     const taskMinutes = hour * 60 + minute;
 
-    if (taskMinutes >= minRange && taskMinutes <= maxRange) {
+    // Send email only at exact time (no range)
+    if (taskMinutes === currentMinutes) {
 
       const taskKey = `${task._id}_${date}`;
       
@@ -470,149 +672,12 @@ Don't forget to complete your task on time! 🚀
 
       });
 
-      // Send to multiple emails if exist
+      // Send to multiple emails if exist - ADD TO QUEUE
       if (task.multipleEmails && task.multipleEmails.length > 0) {
-        console.log(`📧 Sending emails to ${task.multipleEmails.length} recipients...`);
+        console.log(`� Adding ${task.multipleEmails.length} emails to queue for task: ${task.title}`);
         
-        // Send emails one by one with 2 seconds delay
-        const delayBetweenEmails = 2000; // 2 seconds between each email
-        
-        for (let i = 0; i < task.multipleEmails.length; i++) {
-          const email = task.multipleEmails[i];
-          
-          try {
-            console.log(`� Sending email ${i + 1}/${task.multipleEmails.length} to: ${email}`);
-            
-            await transporter.sendMail({
-              from: '"Upsoma Consultancy" <noreply@upsoma.in>',
-              to: email,
-              subject: `Task Reminder: ${task.title} — Upsoma Consultancy`,
-              replyTo: 'support@upsoma.in',
-              headers: {
-                'X-Priority': '3',
-                'X-Mailer': 'Upsoma Consultancy Mailer',
-                'List-Unsubscribe': '<mailto:unsubscribe@upsoma.in>'
-              },
-            html: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Task Reminder - Upsoma Consultancy</title>
-</head>
-
-<body style="margin:0;padding:20px;background:linear-gradient(135deg,#f0f9f0 0%,#ffffff 100%);font-family:Arial,sans-serif;">
-
-<table width="100%" cellpadding="0" cellspacing="0" align="center"
-style="max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);">
-
-<tr>
-<td style="background:linear-gradient(135deg,#d4f1d4 0%,#a8d5a8 100%);padding:40px 30px;text-align:center;">
-
-<h1 style="color:#2d5016;font-size:28px;margin:0 0 8px 0;font-weight:700;">
-Upsoma Consultancy
-</h1>
-
-<p style="color:#4a7c59;font-size:16px;margin:0;font-weight:300;">
-Task Reminder Service
-</p>
-
-</td>
-</tr>
-
-<tr>
-<td style="padding:50px 40px;text-align:center;">
-
-<h2 style="font-size:24px;color:#2d3748;margin:0 0 20px 0;font-weight:600;">
-Task Reminder ⏰
-</h2>
-
-<div style="background:#f0f9f0;border:2px solid #a8d5a8;border-radius:15px;padding:30px;margin:35px auto;max-width:500px;text-align:left;">
-
-<h3 style="color:#2d5016;font-size:20px;margin:0 0 15px 0;font-weight:600;">
-${task.title}
-</h3>
-
-<p style="color:#4a5568;font-size:16px;margin:0 0 20px 0;line-height:1.6;">
-${task.description || 'No description provided'}
-</p>
-
-<table style="width:100%;border-collapse:collapse;">
-<tr>
-<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
-<strong style="color:#4a7c59;">Priority:</strong> 
-<span style="color:#2d3748;">${task.priority || 'Medium'}</span>
-</td>
-</tr>
-<tr>
-<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
-<strong style="color:#4a7c59;">Due Date:</strong> 
-<span style="color:#2d3748;">${task.dueDate || 'Not set'}</span>
-</td>
-</tr>
-${task.deadlineTime ? `
-<tr>
-<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
-<strong style="color:#4a7c59;">Time:</strong> 
-<span style="color:#2d3748;">${task.deadlineTime}</span>
-</td>
-</tr>
-` : ''}
-${task.days ? `
-<tr>
-<td style="padding:10px 0;">
-<strong style="color:#28a745;">Days Remaining:</strong> 
-<span style="color:#28a745;font-weight:600;">${task.days} day${task.days !== 1 ? 's' : ''}</span>
-</td>
-</tr>
-` : ''}
-</table>
-
-</div>
-
-<p style="color:#718096;font-size:14px;margin:20px 0 0 0;">
-Don't forget to complete your task on time! 🚀
-</p>
-
-</td>
-</tr>
-
-<tr>
-<td style="background:#f0f9f0;padding:30px;text-align:center;">
-
-<p style="color:#4a7c59;font-size:14px;margin:0;">
-© 2024 Upsoma Consultancy
-</p>
-<p style="color:#6c757d;margin:5px 0 0 0;font-size:11px;">
-This is an automated reminder. Please reply if you have any questions.
-</p>
-
-</td>
-</tr>
-
-</table>
-
-</body>
-
-</html>`
-            });
-            
-            console.log(`✅ Email sent successfully to: ${email} (${i + 1}/${task.multipleEmails.length})`);
-            
-            // Add 2 seconds delay between emails (except for the last email)
-            if (i < task.multipleEmails.length - 1) {
-              console.log(`⏳ Waiting 2 seconds before next email...`);
-              await new Promise(resolve => setTimeout(resolve, delayBetweenEmails));
-            }
-            
-          } catch (emailError) {
-            console.error(`❌ Failed to send email to ${email}:`, emailError.message);
-            // Continue with next email even if one fails
-            continue;
-          }
-        }
-        
-        console.log(`🎉 All emails processed for task: ${task.title}`);
+        // Add all emails to queue - FIFO system will handle them
+        emailQueue.add(task.multipleEmails, task);
       }
 
       sentEmailsToday.add(taskKey);
@@ -623,9 +688,11 @@ This is an automated reminder. Please reply if you have any questions.
   }
 
   if (res) {
+    const queueStatus = emailQueue.getStatus();
     res.json({ 
       success: true, 
-      message: `Email reminder check completed. ${emailsSent} emails sent.` 
+      message: `Email reminder check completed. ${emailsSent} emails sent directly. ${queueStatus.queueLength} emails in queue.`,
+      queueStatus: queueStatus
     });
   }
 
