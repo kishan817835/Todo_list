@@ -65,7 +65,12 @@ export class Dashboard {
   showPopup = false;
   popupMessage = '';
   showAllTasks = false;
-  
+
+  // Multiple Email Properties
+  showMultipleEmailPopup: boolean = false;
+  multipleEmails: string[] = [];
+  newEmail: string = '';
+
   priorityOptions = [
     { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800' },
     { value: 'medium', label: 'Medium', color: 'bg-yellow-100 text-yellow-800' },
@@ -104,6 +109,7 @@ export class Dashboard {
   ngAfterViewInit() {
     this.loadUserProfile();
     this.loadRecentTasks();
+    this.loadSavedEmails();
   }
   
   loadUserProfile() {
@@ -112,12 +118,15 @@ export class Dashboard {
       this.userProfile = user;
     }
   }
-onMailToggle() {
-  
-  console.log("Mail Notification:", this.mailNotification);
-}
 
- 
+  loadSavedEmails() {
+    const savedEmails = this.secureLs.get('multipleEmails') || [];
+    this.multipleEmails = savedEmails;
+  }
+
+  onMailToggle() {
+    console.log("Mail Notification:", this.mailNotification);
+  }
 
   loadRecentTasks() {
   this.isLoading = true;
@@ -166,7 +175,13 @@ onMailToggle() {
 
     console.log(this.newTask);
     
-    this.api.createTask(this.newTask).subscribe({
+    // Add multiple emails to the task if mail notification is ON
+    const taskData = {
+      ...this.newTask,
+      multipleEmails: this.mailNotification ? (this.secureLs.get('multipleEmails') || []) : []
+    };
+    
+    this.api.createTask(taskData).subscribe({
       next: (response: any) => {
         if (response.success) {
           this.tasks.push(response.data);
@@ -453,5 +468,49 @@ TaskVisibility(task: Task) {
   viewRecentTasks() {
     this.showAllTasks = false;
     this.loadRecentTasks();
+  }
+
+  openMultipleEmailPopup() {
+    this.showMultipleEmailPopup = true;
+  }
+
+  closeMultipleEmailPopup() {
+    this.showMultipleEmailPopup = false;
+    // Don't clear newEmail, keep it for next time
+    this.cdr.detectChanges();
+  }
+
+  addEmail() {
+    if (!this.newEmail.trim()) {
+      this.showMessage('Please enter an email address');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.newEmail)) {
+      this.showMessage('Please enter a valid email address');
+      return;
+    }
+
+    if (this.multipleEmails.includes(this.newEmail.toLowerCase())) {
+      this.showMessage('This email is already added');
+      return;
+    }
+
+    this.multipleEmails.push(this.newEmail.toLowerCase());
+    this.newEmail = '';
+    this.cdr.detectChanges();
+  }
+
+  removeEmail(index: number) {
+    this.multipleEmails.splice(index, 1);
+    this.cdr.detectChanges();
+  }
+
+  saveMultipleEmails() {
+    // Save to local storage or send to backend
+    this.secureLs.set('multipleEmails', this.multipleEmails);
+    this.showMessage(`${this.multipleEmails.length} email(s) saved for reminders`);
+    this.closeMultipleEmailPopup();
   }
 }

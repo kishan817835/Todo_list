@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, priority, dueDate,deadlineTime } = req.body;
+    const { title, description, priority, dueDate, deadlineTime, multipleEmails } = req.body;
 
     const lastTask = await Task
       .findOne({ createdBy: req.user.userId })
@@ -17,6 +17,7 @@ export const createTask = async (req, res) => {
       priority,
       dueDate,
       deadlineTime,
+      multipleEmails: multipleEmails || [],
       createdBy: req.user.userId,
       order: nextOrder
     });

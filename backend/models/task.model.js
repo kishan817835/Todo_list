@@ -54,12 +54,18 @@ const taskSchema = new mongoose.Schema(
     enum: ["public", "private"],
     default: "private",
     index: true
-  } 
+  },
+  multipleEmails: [{
+    type: String,
+    trim: true,
+    lowercase: true,
+    required: false
+  }]
 
   },
   {
     timestamps: true
-  }
+  },
 );
 
 taskSchema.index({ createdBy: 1, order: 1 });
