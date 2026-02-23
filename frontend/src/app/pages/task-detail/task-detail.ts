@@ -21,6 +21,7 @@ interface Task {
   createdAt: string;
   days?: number;
   visibility?: 'public' | 'private';
+  multipleEmails?: string[];
 }
 
 

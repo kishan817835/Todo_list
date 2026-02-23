@@ -133,6 +133,26 @@
 
       </div>
     </div>
+
+    <!-- Multiple Emails Section -->
+    <div class="multiple-emails-section" *ngIf="task.multipleEmails && task.multipleEmails.length > 0">
+      <div class="emails-header">
+        <div class="emails-icon">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+          </svg>
+        </div>
+        <div class="emails-content">
+          <h3>Shared this reminder with email to:</h3>
+          <div class="emails-list">
+            <span class="email-badge" *ngFor="let email of task.multipleEmails">
+              {{ email }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- Popup Message -->

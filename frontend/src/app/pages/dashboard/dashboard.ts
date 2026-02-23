@@ -7,6 +7,8 @@ import { SecureLs } from '../../secure-ls';
 import { ChangeDetectorRef } from '@angular/core';
 import { QuillModule } from 'ngx-quill';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { LoaderComponent } from '../../components/loader/loader.component';
+import { LoaderService } from '../../services/loader.service';
 
 interface Task {
   _id: string;
@@ -35,7 +37,7 @@ interface User {
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  imports: [CommonModule, FormsModule, QuillModule],
+  imports: [CommonModule, FormsModule, QuillModule, LoaderComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class Dashboard {
@@ -100,7 +102,8 @@ export class Dashboard {
     private api: Api,
     private router: Router,
     private secureLs: SecureLs,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private loaderService: LoaderService
   ) {}
   totalTasks: number = 0;
   pendingTasks: number = 0;
@@ -129,7 +132,7 @@ export class Dashboard {
   }
 
   loadRecentTasks() {
-  this.isLoading = true;
+  this.loaderService.show();
 
   this.api.getrecenttasks().subscribe({
     next: (response: any) => {
@@ -141,16 +144,13 @@ export class Dashboard {
       this.tasks = response.data || [];
       this.filteredTasks = [...this.tasks];
 
-      
-      
-  
-      this.isLoading = false;
+      this.loaderService.hide();
       this.cdr.detectChanges();
     },
     error: (error) => {
       console.error('Error loading recent tasks:', error);
       this.showMessage('Failed to load recent tasks');
-      this.isLoading = false;
+      this.loaderService.hide();
       this.cdr.detectChanges();
     }
   });
@@ -181,6 +181,8 @@ export class Dashboard {
       multipleEmails: this.mailNotification ? (this.secureLs.get('multipleEmails') || []) : []
     };
     
+    this.loaderService.show();
+    
     this.api.createTask(taskData).subscribe({
       next: (response: any) => {
         if (response.success) {
@@ -193,10 +195,12 @@ export class Dashboard {
             this.loadRecentTasks();
           }, 100);
         }
+        this.loaderService.hide();
       },
       error: (error) => {
         console.error('Error creating task:', error);
         this.showMessage(error?.error?.message || 'Failed to create task');
+        this.loaderService.hide();
       }
     });
   }
@@ -211,6 +215,8 @@ export class Dashboard {
     } else if (updateData.status !== 'completed') {
       updateData.completedAt = undefined;
     }
+    
+    this.loaderService.show();
     
     this.api.updateTask(this.editingTask._id, updateData).subscribe({
       next: (response: any) => {
@@ -231,12 +237,15 @@ export class Dashboard {
       error: (error) => {
         console.error('Error updating task:', error);
         this.showMessage(error?.error?.message || 'Failed to update task');
+        this.loaderService.hide();
       }
     });
   }
   
   deleteTask(taskId: string) {
     if (!confirm('Are you sure you want to delete this task?')) return;
+    
+    this.loaderService.show();
     
     this.api.deleteTask(taskId).subscribe({
       next: (response: any) => {
@@ -249,11 +258,12 @@ export class Dashboard {
             this.loadRecentTasks();
           }, 100);
         }
+        this.loaderService.hide();
       },
       error: (error) => {
         console.error('Error deleting task:', error);
         this.showMessage(error?.error?.message || 'Failed to delete task');
-        this.cdr.detectChanges();
+        this.loaderService.hide();
       }
     });
   }
@@ -287,6 +297,8 @@ TaskVisibility(task: Task) {
     visibility: newVisibility
   };
 
+  this.loaderService.show();
+
   this.api.Taskvisibility(task._id, payload).subscribe({
     next: (response: any) => {
       if (response.success) {
@@ -295,12 +307,15 @@ TaskVisibility(task: Task) {
           this.tasks[index] = response.data;
           this.filteredTasks = [...this.tasks];
           this.showMessage('Task visibility updated successfully');
+          this.cdr.detectChanges(); // Immediate UI update
         }
       }
+      this.loaderService.hide();
     },
     error: (error: any) => {
       console.error('Error updating task visibility:', error);
       this.showMessage('Failed to update task visibility');
+      this.loaderService.hide();
     }
   });
 }
@@ -309,6 +324,8 @@ TaskVisibility(task: Task) {
   toggleTaskStatus(task: Task) {
     const newStatus = task.status === 'completed' ? 'pending' : 'completed';
     const updateData = { status: newStatus };
+    
+    this.loaderService.show();
     
     this.api.updateTask(task._id, updateData).subscribe({
       next: (response: any) => {
@@ -327,10 +344,12 @@ TaskVisibility(task: Task) {
             this.cdr.detectChanges();
           }
         }
+        this.loaderService.hide();
       },
       error: (error) => {
         console.error('Error toggling task status:', error);
         this.showMessage('Failed to update task status');
+        this.loaderService.hide();
       }
     });
   }
@@ -341,20 +360,26 @@ TaskVisibility(task: Task) {
       order: index + 1
     }));
     
+    this.loaderService.show();
+    
     this.api.reorderTasks(updates).subscribe({
       next: (response: any) => {
         if (response.success) {
           this.showMessage('Tasks reordered successfully');
         }
+        this.loaderService.hide();
       },
       error: (error) => {
         console.error('Error reordering tasks:', error);
         this.showMessage('Failed to reorder tasks');
+        this.loaderService.hide();
       }
     });
   }
   
   getTaskDays(taskId: string) {
+    this.loaderService.show();
+    
     this.api.getTaskDaysCount(taskId).subscribe({
       next: (response: any) => {
         if (response.success) {
@@ -364,15 +389,19 @@ TaskVisibility(task: Task) {
             this.filteredTasks = [...this.tasks];
           }
         }
+        this.loaderService.hide();
       },
       error: (error) => {
         console.error('Error getting task days:', error);
+        this.loaderService.hide();
       }
     });
   }
   
   applyFilters() {
+    this.loaderService.show();
     this.loadRecentTasks();
+    this.loaderService.hide();
   }
   
   resetFilters() {

@@ -12,6 +12,17 @@
   border-radius: 8px 8px 0 0;
   padding: 8px 12px;
 }
+.btn-remove-email {
+  cursor: pointer;
+  color: red;
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+.btn-remove-email:hover {
+  color: darkred;
+  transform: scale(1.1);
+}
 
 .modern-editor .ql-container {
   border: 1px solid #e2e8f0;
