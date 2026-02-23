@@ -472,12 +472,27 @@ Don't forget to complete your task on time! 🚀
 
       // Send to multiple emails if exist
       if (task.multipleEmails && task.multipleEmails.length > 0) {
+        console.log(`📧 Sending emails to ${task.multipleEmails.length} recipients...`);
         
-        for (const email of task.multipleEmails) {
-          await transporter.sendMail({
-            from: '"Upsoma Consultancy" <noreply@upsoma.in>',
-            to: email,
-            subject: `Task Reminder: ${task.title} — Upsoma Consultancy`,
+        // Send emails one by one with 2 seconds delay
+        const delayBetweenEmails = 2000; // 2 seconds between each email
+        
+        for (let i = 0; i < task.multipleEmails.length; i++) {
+          const email = task.multipleEmails[i];
+          
+          try {
+            console.log(`� Sending email ${i + 1}/${task.multipleEmails.length} to: ${email}`);
+            
+            await transporter.sendMail({
+              from: '"Upsoma Consultancy" <noreply@upsoma.in>',
+              to: email,
+              subject: `Task Reminder: ${task.title} — Upsoma Consultancy`,
+              replyTo: 'support@upsoma.in',
+              headers: {
+                'X-Priority': '3',
+                'X-Mailer': 'Upsoma Consultancy Mailer',
+                'List-Unsubscribe': '<mailto:unsubscribe@upsoma.in>'
+              },
             html: `<!DOCTYPE html>
 <html>
 <head>
@@ -525,16 +540,32 @@ ${task.description || 'No description provided'}
 <table style="width:100%;border-collapse:collapse;">
 <tr>
 <td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
-<strong style="color:#4a7c59;">Date:</strong> 
-<span style="color:#2d3748;">${taskDate}</span>
+<strong style="color:#4a7c59;">Priority:</strong> 
+<span style="color:#2d3748;">${task.priority || 'Medium'}</span>
 </td>
 </tr>
 <tr>
-<td style="padding:10px 0;">
+<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
+<strong style="color:#4a7c59;">Due Date:</strong> 
+<span style="color:#2d3748;">${task.dueDate || 'Not set'}</span>
+</td>
+</tr>
+${task.deadlineTime ? `
+<tr>
+<td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
 <strong style="color:#4a7c59;">Time:</strong> 
 <span style="color:#2d3748;">${task.deadlineTime}</span>
 </td>
 </tr>
+` : ''}
+${task.days ? `
+<tr>
+<td style="padding:10px 0;">
+<strong style="color:#28a745;">Days Remaining:</strong> 
+<span style="color:#28a745;font-weight:600;">${task.days} day${task.days !== 1 ? 's' : ''}</span>
+</td>
+</tr>
+` : ''}
 </table>
 
 </div>
@@ -550,7 +581,10 @@ Don't forget to complete your task on time! 🚀
 <td style="background:#f0f9f0;padding:30px;text-align:center;">
 
 <p style="color:#4a7c59;font-size:14px;margin:0;">
-© 2026 Upsoma Consultancy
+© 2024 Upsoma Consultancy
+</p>
+<p style="color:#6c757d;margin:5px 0 0 0;font-size:11px;">
+This is an automated reminder. Please reply if you have any questions.
 </p>
 
 </td>
@@ -561,8 +595,24 @@ Don't forget to complete your task on time! 🚀
 </body>
 
 </html>`
-          });
+            });
+            
+            console.log(`✅ Email sent successfully to: ${email} (${i + 1}/${task.multipleEmails.length})`);
+            
+            // Add 2 seconds delay between emails (except for the last email)
+            if (i < task.multipleEmails.length - 1) {
+              console.log(`⏳ Waiting 2 seconds before next email...`);
+              await new Promise(resolve => setTimeout(resolve, delayBetweenEmails));
+            }
+            
+          } catch (emailError) {
+            console.error(`❌ Failed to send email to ${email}:`, emailError.message);
+            // Continue with next email even if one fails
+            continue;
+          }
         }
+        
+        console.log(`🎉 All emails processed for task: ${task.title}`);
       }
 
       sentEmailsToday.add(taskKey);
