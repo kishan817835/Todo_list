@@ -228,6 +228,7 @@ export class Dashboard {
           }
           this.editingTask = null;
           this.showMessage('Task updated successfully');
+            this.loaderService.hide();
           this.cdr.detectChanges();
           setTimeout(() => {
             this.loadRecentTasks();
